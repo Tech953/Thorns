@@ -10,7 +10,7 @@ async function action(op,data={}){if(busy)return;busy=true;error(null);try{state
 for(const op of ['create','join'])$(op).onsubmit=async e=>{e.preventDefault();if(busy)return;busy=true;error(null);try{await Creator.init;const d=Object.fromEntries(new FormData(e.target));d.character=Creator.read();d.role=Creator.role();if(op==='create'){d.procedural=$('procedural').checked;d.hardcore=$('hardcore').checked;}session=await api(op,d);sessionStorage.setItem('thorns-session',JSON.stringify(session));localStorage.setItem('thorns-recovery',JSON.stringify(session));$('resume').hidden=false;await poll();}catch(e){error(e);}finally{busy=false;}};
 async function poll(){if(!session)return;try{state=await api('state');$('connection').textContent='CONNECTED';render();}catch(e){$('connection').textContent='RECONNECTING…';error(e);}}
 function render(){if(!state||!session)return;const key=JSON.stringify(state);if(key===lastRender)return;lastRender=key;
- $('lobby').hidden=true;$('game').hidden=false;if(state.started)Creator.editing=false;$('builder').hidden=!Creator.editing;
+ $('lobby').hidden=true;$('game').hidden=false;lobbySkip.hidden=true;if(state.started)Creator.editing=false;$('builder').hidden=!Creator.editing;
  document.body.dataset.region=state.scene.region;
  const host=state.host===session.id,ended=state.scene.choices.length===0;
  $('room').textContent=`ROOM ${state.code} / TURN ${state.turn}`;
@@ -30,7 +30,7 @@ function render(){if(!state||!session)return;const key=JSON.stringify(state);if(
 }
 $('start').onclick=()=>action('start');$('resolve').onclick=()=>action('resolve');$('actor').onchange=e=>action('actor',{actor:e.target.value});
 $('chat-form').onsubmit=async e=>{e.preventDefault();const text=$('message').value;if(!text.trim())return;if(await action('chat',{message:text}))$('message').value='';};
-function exit(){session=null;state=null;lastRender='';sessionStorage.removeItem('thorns-session');$('game').hidden=true;$('lobby').hidden=false;$('builder').hidden=false;Creator.editing=false;$('build-apply').hidden=true;$('build-cancel').hidden=true;error(null);}
+ function exit(){session=null;state=null;lastRender='';sessionStorage.removeItem('thorns-session');$('game').hidden=true;$('lobby').hidden=false;$('builder').hidden=false;lobbySkip.hidden=false;Creator.editing=false;$('build-apply').hidden=true;$('build-cancel').hidden=true;error(null);}
 $('resume').hidden=!localStorage.getItem('thorns-recovery');$('resume').onclick=()=>{try{session=JSON.parse(localStorage.getItem('thorns-recovery'));sessionStorage.setItem('thorns-session',JSON.stringify(session));poll();}catch(e){error(e);}};
 $('exit').onclick=exit;$('new').onclick=exit;$('leave').onclick=async()=>{try{await api('leave',{revision:state.revision});localStorage.removeItem('thorns-recovery');$('resume').hidden=true;exit();}catch(e){error(e);}};
 let crt=localStorage.getItem('thorns-crt')!=='off';function crtRender(){document.body.classList.toggle('no-crt',!crt);$('crt').textContent=`CRT EFFECT: ${crt?'ON':'OFF'}`;}crtRender();$('crt').onclick=()=>{crt=!crt;localStorage.setItem('thorns-crt',crt?'on':'off');crtRender();};
