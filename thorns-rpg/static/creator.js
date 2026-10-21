@@ -4,6 +4,11 @@ window.Creator={ready:false,catalog:null,editing:false};
  const get=id=>document.getElementById(id),el=(t,s)=>{const e=document.createElement(t);e.textContent=s;return e;};
  const C=window.Creator;let role='Needlurgist';
  const holder=get('build-boundary')?.parentElement?.parentElement;
+ if(holder&&!get('build-story')){
+  const details=document.createElement('details');details.id='build-story';details.className='builder-optional';
+  details.append(el('summary','CHARACTER STORY / PRESENTATION'),el('p','History, goals, boundaries, appearance, voice, mannerisms and age description add characterization, not automatic numeric bonuses.'));
+  holder.parentElement.insertBefore(details,holder);details.append(holder);
+ }
  for(const [key,label,max] of [['appearance','Appearance',1000],['voice','Dialogue voice',500],['mannerisms','Mannerisms',500],['age','Age description',50]]){
   if(!get('build-'+key)&&holder){const wrap=el('label',label),input=document.createElement(key==='age'?'input':'textarea');input.id='build-'+key;input.maxLength=max;wrap.append(input);holder.append(wrap);}
  }
