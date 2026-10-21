@@ -125,7 +125,7 @@ CONTRACT_LIVELIHOOD_VARIATIONS={
  'route/survey work':'Route-reading experience gives this brief a familiar frame; the recorded route still needs field verification.',
  'records/research work':'Records work gives the evidence a familiar frame; the route still needs field verification.',
 }
-CONTRACT_RELATIONSHIP_VARIATION='The {faction} thread is part of your character record; it adds no terms and does not verify the route.'
+CONTRACT_RELATIONSHIP_VARIATION='A mention of {faction} in your record adds no promise from the issuer.'
 TEMPLATE_WORK_CONTEXTS={
  'pilgrims':{'route/survey work'},
  'salvage':{'craft/repair work','supply/trade work'},
@@ -163,7 +163,7 @@ ENCOUNTER_LIVELIHOOD_VARIATIONS={
  'teaching/learning work':'Teaching experience can clarify {frame}; it does not choose the conclusion.',
  'ecology/stewardship work':'A stewardship lens can frame {frame}; it does not guarantee an outcome.',
 }
-ENCOUNTER_RELATIONSHIP_VARIATION='The {faction} thread is part of your character record; it does not establish the other party’s position.'
+ENCOUNTER_RELATIONSHIP_VARIATION='The {faction} entry in your record does not establish this group’s position.'
 RELATIONSHIP_ALIASES={
  'KHO / ED.NET':('KHO','ED.NET'),
  'FOOTHILL CUSP residents':('FOOTHILL CUSP',),

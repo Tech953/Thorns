@@ -97,12 +97,13 @@ class SystemsTests(unittest.TestCase):
   contract={'livelihood':['records/research work'],'relationship':'Embrite'}
   note=w.contract_context_variation(contract)
   self.assertIn('Records work',note)
-  self.assertIn('adds no terms',note)
+  self.assertIn('adds no promise from the issuer',note)
   self.assertEqual(note,w.contract_context_variation(contract))
   encounter={'livelihood':['care work'],'relationship':'Embrite'}
   note=w.encounter_context_variation(encounter,'shelter')
   self.assertIn('shelter’s failing anchors',note)
   self.assertIn('not a diagnosis or treatment',note)
+  self.assertIn('does not establish this group’s position',note)
   self.assertEqual(note,w.encounter_context_variation(encounter,'shelter'))
   self.assertEqual('',w.encounter_context_variation({},'shelter'))
  def test_pvp_consent_range_and_turn_limit(self):
