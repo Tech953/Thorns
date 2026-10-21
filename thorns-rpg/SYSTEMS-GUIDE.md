@@ -6,11 +6,11 @@ This update integrates character creation and regional social systems into the e
 
 ## Create a character
 
-Start the server as described in README.md, then use the character creator above the expedition lobby. Choose a discipline preset, customize its four attributes and proficiencies, and describe your origin, embodiment, affiliation, affinity, history, goal and boundaries. Supply your name when creating or joining the room. Pronouns, form and origin never apply score modifiers.
+Start the server as described in README.md, then use the character creator above the expedition lobby. Choose a discipline preset, customize its four attributes and proficiencies, and describe your origin, embodiment, affiliation, affinity, livelihood, appearance, voice, mannerisms, history, goal, unanswered question, relationship or promise and boundaries. Supply your name when creating or joining the room. New characters allocate exactly six training points; attributes and story details remain separate.
 
-A preset change replaces the current draft with that preset. Save your draft first if you want to retain it. You can save/load one browser draft or export/import a portable JSON character. Exports contain the concept and build only; they do not include room credentials, XP, reputation, live permissions or saved campaign progress. Importing a build never imports privileged access. The server validates allocations independently of browser validation.
+A preset change replaces the current draft with that preset. Save your draft first if you want to retain it. You can save/load one browser draft or export/import a portable JSON character. Version 2 exports contain the concept and build only; version 1 character files remain importable, but a new character must have exactly six training points before it can be submitted. Exports never include room credentials, XP, reputation, live permissions or saved campaign progress. The server validates allocations independently of browser validation.
 
-Within a room, use **Edit my character** before the host starts. Editing locks on start. Party character sheets show each member's build, XP, permissions and recorded conditions. History and boundaries are shared with the party; these are roleplay guidance, not enforced content filters. At present there is no name-change control in the editor, though the authenticated lobby-edit API accepts a valid name.
+Within a room, use **Edit my character** before the host starts. Editing locks on start. Party character sheets show each member's build, XP, permissions and recorded conditions, with optional presentation and story fields grouped separately. These are persistent shared character-context fields for the wider simulation; they do not grant automatic stat bonuses or permissions. Old under-budget characters can retain their existing training allocation while editing other details; changing their training requires allocating all six points. At present there is no name-change control in the editor, though the authenticated lobby-edit API accepts a valid name.
 
 ## Measurements used by the game
 
@@ -22,7 +22,7 @@ Within a room, use **Edit my character** before the host starts. Editing locks o
 | Rapport | Integer 1–4 | Negotiation, cooperative teaching and speech |
 | Attribute budget | Exactly 8 total | The original six presets remain available |
 | Proficiency rank | Integer 0–3 | 0 untrained; 1 familiar; 2 practiced; 3 focused |
-| Training budget | Up to 6 total | Unspent points are visible; no post-start spending yet |
+| Training budget | Exactly 6 for new characters | Existing version 1 builds are preserved; no post-start spending yet |
 | Experience | Non-negative earned XP | +1 XP per attempted expedition/encounter check |
 | Experience bonus | min(2, floor(XP / 3)) | Adds to checks |
 | Applicable training | min(2, highest relevant rank) | One skill contributes, not the sum of all skills |

@@ -1,3 +1,9 @@
+# Unreleased — Character sheet alignment
+
+- New builds use version 2 character records, require exactly six training points, and include optional livelihood, unanswered question and relationship/promise fields.
+- Preserve version 1 imports and older under-budget saves; unchanged legacy skill allocations remain editable without granting extra training.
+- Show optional story and presentation details in a separate party-sheet disclosure.
+
 # 0.6.0 — Field Guide systems integration
 
 Added the guide's catalog, bounded seeded encounter generator, graded checks with exact odds, AP combat, finite ammunition/salvage, earned-XP progression, material wear/repair/replacement and companion support costs. Added an integrated field interface and host-controlled legacy-save adoption. Preserved map assets and existing character/history data. Fixed departing-seat combat turns and post-Growth reconnect behavior. See FIELD-GUIDE-UPDATE.md and FIELD-GUIDE-VALIDATION.md.

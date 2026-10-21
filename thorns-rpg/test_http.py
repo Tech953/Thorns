@@ -1,5 +1,5 @@
 """Start a temporary local server; exercise the actual HTTP boundary."""
-import json, tempfile, threading, unittest
+import copy, json, tempfile, threading, unittest
 from urllib.request import Request,urlopen
 from urllib.error import HTTPError
 from pathlib import Path
@@ -17,8 +17,11 @@ class HTTPTests(unittest.TestCase):
     with urlopen(url+'/character-catalog') as r:catalog=json.load(r)
     c=catalog['presets']['Needlurgist'];c.pop('legacy');c['attributes']={'body':2,'tech':2,'percept':2,'rapport':2}
     h=call(dict(op='create',ruleset='legacy',name='Custom',role='Needlurgist',character=c,procedural=False))
+    undertrained=copy.deepcopy(c);undertrained['skills']={}
+    with self.assertRaises(HTTPError):call(dict(op='create',ruleset='legacy',name='Undertrained',role='Needlurgist',character=undertrained,procedural=False))
     ps=[h]+[call(dict(op='join',code=h['code'],name='Guest '+str(i),role='Light Reader')) for i in range(5)]
     r=call(dict(**h,op='state'));self.assertEqual(r['players'][0]['sheet']['attributes']['tech'],2)
+    self.assertEqual(r['players'][0]['sheet']['schema'],2);self.assertIn('livelihood',r['players'][0]['sheet'])
     self.assertEqual(len(r['reputation']),25)
     call(dict(**h,op='start',revision=r['revision']))
     for p in ps:

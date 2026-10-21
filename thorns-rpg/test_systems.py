@@ -11,6 +11,12 @@ class SystemsTests(unittest.TestCase):
  def test_point_budgets_and_injection(self):
   raw=c.default('Needlurgist');raw.pop('legacy')
   self.assertEqual(c.validate(raw,'Needlurgist')['attributes']['tech'],4)
+  partial=copy.deepcopy(raw);partial['skills']={}
+  with self.assertRaises(ValueError):c.validate(partial,'Needlurgist')
+  partial['schema']=1
+  grandfathered=c.validate(partial,'Needlurgist',allow_legacy_training=True)
+  self.assertEqual(grandfathered['schema'],1);self.assertEqual(sum(grandfathered['skills'].values()),0)
+  with self.assertRaises(ValueError):c.validate(partial,'Needlurgist')
   for kind in ['over','bool','unknown','privilege','skill','negative']:
    bad=copy.deepcopy(raw)
    if kind=='over':bad['attributes']['tech']=5
@@ -27,6 +33,23 @@ class SystemsTests(unittest.TestCase):
   with self.assertRaises(ValueError):self.call('character',character=raw)
   r=s.fetch(self.host['code']);del r['players'][0]['character'];s.save(r)
   restored=self.call('state')['players'][0]['sheet'];self.assertTrue(restored['legacy']);self.assertEqual(restored['skills'],{})
+ def test_story_fields_and_grandfathered_training(self):
+  stored=c.default('Needlurgist',legacy=True);stored['skills']={'archive':1}
+  for field in ('livelihood','question','relationship'):stored.pop(field)
+  r=s.fetch(self.host['code']);p=r['players'][0];p['character']=stored;s.save(r)
+  story=copy.deepcopy(stored);story.pop('legacy')
+  story.update(livelihood='Trail mechanic',question='Who mapped the undercroft?',relationship='Owes a safe return to Mira')
+  self.call('character',character=story)
+  sheet=self.call('state')['players'][0]['sheet']
+  self.assertEqual(sheet['schema'],1);self.assertEqual(sheet['skills'],{'archive':1})
+  for field in ('livelihood','question','relationship'):
+   self.assertEqual(sheet[field],story[field])
+  changed=copy.deepcopy(story);changed['skills']={'archive':2}
+  with self.assertRaises(ValueError):self.call('character',character=changed)
+  completed=copy.deepcopy(story);completed['skills']={'archive':1,'fractech':3,'community':2}
+  self.call('character',character=completed)
+  sheet=self.call('state')['players'][0]['sheet']
+  self.assertEqual(sheet['schema'],2);self.assertEqual(sum(sheet['skills'].values()),6)
  def test_check_breakdown_and_mod_gate(self):
   r=s.fetch(self.host['code']);p=r['players'][0];r['node']='web';p['character']['mod']='meta_fingers';p['character']['skills']={}
   a=c.breakdown(p,r,s.options(r)[0]);self.assertEqual(a['mod'],0)
