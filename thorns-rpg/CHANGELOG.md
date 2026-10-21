@@ -3,6 +3,7 @@
 - New builds use version 2 character records, require exactly six training points, and include optional livelihood, unanswered question and relationship/promise fields.
 - Preserve version 1 imports and older under-budget saves; unchanged legacy skill allocations remain editable without granting extra training.
 - Show optional story and presentation details in a separate party-sheet disclosure.
+- Add deterministic, informational livelihood and named-relationship context to survey contracts and procedural encounters without changing game mechanics.
 
 # 0.6.0 — Field Guide systems integration
 

@@ -32,6 +32,15 @@ class OverlandTests(unittest.TestCase):
   with patch('overland.secrets.randbelow',return_value=19):r=self.call('ow_complete')
   p=r['players'][0];self.assertIsNone(p['contract']);self.assertEqual(p['benefits'],1);self.assertEqual(p['karma'],2);self.assertEqual(r['reputation'][c['faction']],2)
   self.assertEqual(s.fetch(r['code'])['players'][0]['benefits'],1)
+ def test_contract_preview_and_saved_context_do_not_change_terms(self):
+  self.open(False);r=s.fetch(self.host['code']);p=r['players'][0]
+  p['character'].update(livelihood='Independent courier',relationship='I owe Embrite a safe return');s.save(r)
+  preview=self.call('state')['players'][0]['overland']['contract_preview']
+  self.assertEqual(preview['context'],{'livelihood':['route/survey work'],'relationship':'Embrite'})
+  contract=self.call('ow_contract')['players'][0]['contract']
+  self.assertEqual(contract['context'],preview['context'])
+  self.assertEqual((contract['kind'],contract['faction'],contract['target'],contract['reward']),
+                   ('Survey and return a verified route record','Embrite',[2,1],18))
  def test_mod_cost_limit_and_bonus(self):
   self.open();r=s.fetch(self.host['code']);r['players'][0]['credits']=100;s.save(r)
   for m in ['survey_lens','filter_graft','rest_regulator']:r=self.call('ow_mod',mod=m)
@@ -43,9 +52,12 @@ class OverlandTests(unittest.TestCase):
   r=s.fetch(r['code']);r['hardcore']=True;r['players'][0]['vitals'].update(health=1,thirst=99);s.save(r)
   r=self.call('ow_move',dx=1,dy=0);self.assertEqual(r['players'][0]['grid'],[0,0]);self.assertEqual(r['players'][0]['vitals']['health'],35)
  def test_encounter_blocks_movement_and_declines(self):
-  self.open();r=s.fetch(self.host['code']);r['procedural']=True;s.save(r)
-  with patch('overland.secrets.randbelow',return_value=0):r=self.call('ow_move',dx=1,dy=0)
+  self.open(False);r=s.fetch(self.host['code']);r['procedural']=True
+  r['players'][0]['character'].update(livelihood='courier',relationship='Embrite');s.save(r)
+  with patch('overland.secrets.randbelow',return_value=0),patch('world.secrets.choice',side_effect=lambda values:values[0]):
+   r=self.call('ow_move',dx=1,dy=0)
   self.assertIsNotNone(r['players'][0]['event'])
+  self.assertEqual(r['players'][0]['event']['context'],{'livelihood':['route/survey work'],'relationship':'Embrite'})
   with self.assertRaises(ValueError):self.call('ow_move',dx=1,dy=0)
   r=self.call('ow_encounter',choice=3);self.assertIsNone(r['players'][0]['event'])
  def test_duel_can_finish_without_story(self):

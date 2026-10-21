@@ -33,6 +33,14 @@ Relay, market, and sanctuary boards offer one survey contract at a time. Reach i
 
 Faction reputation is shared by the party; karma and benefits belong to each character. Karma ranges from −100 to +100 and records conduct; it does not yet gate dialogue or endings. Successful encounter assistance adds 1 karma and 5 credits. Declining a random encounter is neutral. The contract system currently has one reusable survey objective with changing destinations and faction contacts, not a full quest generator.
 
+### Character context links
+
+The board previews deterministic context notes before acceptance. Survey work recognizes whole-phrase, case-insensitive livelihood matches for route/survey work (courier, scout, surveyor, cartographer, mapmaker, route mapper/recorder, guide, pilgrim) and records/research work (researcher, archivist, historian, scholar, analyst, scribe, record keeper). A relationship thread appears only when the character's relationship/promise text contains the issuer's normalized name; explicit short aliases are KHO, ED.NET, FOOTHILL CUSP, CHECKPOINT.RESID, Lila, and CASC. These notes describe a possible point of familiarity, not trust or permission.
+
+Procedural encounter notes use fixed template tags: pilgrims → route/survey; salvage → craft/repair or supply/trade; shelter → craft/repair, care, or ecology/stewardship; echo → records/research or teaching/learning; lesson → records/research or teaching/learning; provision → supply/trade or care; ink → records/research or supply/trade; seam and crystal → craft/repair or records/research; wood → records/research, supply/trade, or ecology/stewardship; light → records/research or teaching/learning; rhetoric → records/research or supply/trade. Recognized livelihood terms are mechanic, repairer, artisan, metalworker, craftsperson, technician, engineer, seamLLurgist, needlurgist; farmer, trader, merchant, supplier, provisioner, cook, caravan runner, vendor; medic, healer, nurse, caregiver, care worker, field medic; teacher, tutor, instructor, educator, student, apprentice; ecologist, botanist, cultivator, forager, gardener, and druid.
+
+Context annotations do not change which contract or encounter is generated, the route, DC, die roll, rewards, reputation, standing, or permissions. Unrecognized free text remains visible on the character sheet but is not interpreted by these rules.
+
 ## Encounters and checks
 
 With procedural encounters enabled, movement has a 30% encounter chance. Twelve templates avoid each character's three most recent encounters. Each provides three authored speech/skill approaches and a neutral decline. Encounters pause that character's other exploration actions until resolved; other players remain free to act.

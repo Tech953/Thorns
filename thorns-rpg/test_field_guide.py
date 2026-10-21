@@ -337,6 +337,19 @@ class FieldGuideTests(unittest.TestCase):
         self.assertEqual(p['xp'],2);self.assertIsNone(p['contract'])
         self.assertEqual(len(p['paid_contracts']),1)
 
+    def test_field_guide_contract_carries_context_without_changing_escrow(self):
+        w=self.fetch();p=self.player(w)
+        p['character'].update(livelihood='Courier',relationship='I owe Embrite a safe return')
+        server.save(w)
+        preview=self.call('state')['players'][0]['overland']['contract_preview']
+        self.assertEqual(preview['context'],{'livelihood':['route/survey work'],'relationship':'Embrite'})
+        self.call('ow_contract')
+        p=self.player(self.fetch());cm=p['contract']
+        self.assertEqual(cm['context'],preview['context'])
+        self.assertEqual(cm['escrow'],dict(food=2,water=2,seed=1))
+        self.assertEqual(cm['evidence'],'Percept/percept DC 10 at the destination')
+        self.assertEqual(cm['reward'],'2 food, 2 water, 1 seed, 2 XP, +2 issuer standing')
+
     def test_same_native_resource_work_is_not_an_xp_farm(self):
         if not STEM:return
         with patch('field_rules.die',side_effect=lambda w,n,label:n):

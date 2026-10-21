@@ -70,6 +70,28 @@ class SystemsTests(unittest.TestCase):
   with patch('world.secrets.randbelow',return_value=0):w.generate(r,'CITY_CLOUD_S')
   self.assertTrue(8<=r['encounter']['choices'][0]['dc']<=11)
   before=copy.deepcopy(r['reputation']);w.settle(r,r['encounter']['choices'][-1],True);self.assertEqual(r['reputation'],before)
+ def test_context_links_require_recognized_whole_phrases(self):
+  context=w.character_context(
+   {'livelihood':'Trail courier and cartographer','relationship':'I promised Lila a safe return.'},
+   {'route/survey work'},'Lila / CASC')
+  self.assertEqual(context,{'livelihood':['route/survey work'],'relationship':'Lila / CASC'})
+  unmatched=w.character_context(
+   {'livelihood':'courierly consultant','relationship':'A distant admirer'},
+   {'route/survey work'},'Embrite')
+  self.assertEqual(unmatched,{'livelihood':[],'relationship':None})
+ def test_context_notes_do_not_change_generated_encounter_rules(self):
+  plain=s.fetch(self.host['code']);plain['procedural']=True
+  linked=copy.deepcopy(plain)
+  linked['players'][0]['character'].update(livelihood='Courier',relationship='I owe Embrite a safe return')
+  with patch('world.secrets.randbelow',return_value=0),patch('world.secrets.choice',side_effect=lambda values:values[0]):
+   w.generate(plain,'WN_TOWER')
+  with patch('world.secrets.randbelow',return_value=0),patch('world.secrets.choice',side_effect=lambda values:values[0]):
+   w.generate(linked,'WN_TOWER')
+  a,b=plain['encounter'],linked['encounter']
+  self.assertEqual((a['template'],a['faction'],a['choices']),(b['template'],b['faction'],b['choices']))
+  self.assertEqual(a['context'],[])
+  self.assertEqual(b['context'],[{'character':'Host','livelihood':['route/survey work'],'relationship':'Embrite'}])
+  self.assertIn('informational only',b['text'])
  def test_pvp_consent_range_and_turn_limit(self):
   guest=self.call('join',name='Guest',role='Light Reader');self.call('start')
   with self.assertRaises(ValueError):self.call('duel_action',target=guest['id'],style='close')
