@@ -83,7 +83,8 @@ def speak(r,p,here,topic,check,log):
  if not ok:body+=' Those public facts remain available; any further interpretation is provisional.'
  text=generation.dialogue(r,p,a,topic,body,ok,here)
  context=world.contact_context(p.get('character',{}),topic,a['faction'])
- p['dialogue_log'].append(dict(site=p['grid'][:],npc=a['name'],topic=topic,response=text,step=p['steps'],character=dict(name=p['name'],**p['character']),context=context))
+ variation=world.contact_dialogue_variation(context,topic)
+ p['dialogue_log'].append(dict(site=p['grid'][:],npc=a['name'],topic=topic,response=text,step=p['steps'],character=dict(name=p['name'],**p['character']),context=context,variation=variation))
  p['dialogue_log']=p['dialogue_log'][-200:];relationship['visits']+=1
  if ok and p['steps']>=relationship['bond_after']:
   relationship['trust']=min(5,relationship['trust']+1);relationship['bond_after']=p['steps']+4
@@ -108,7 +109,7 @@ def view(r,p):
   faction=issuers[0] if field_rules.active(r) else issuers[serial%len(issuers)]
   preview=dict(kind='Survey',description='Return a verified route record',faction=faction,
                context=world.contract_context(p.get('character',{}),faction))
- return dict(contact=a,last_dialogue=last.get('response','') if last else '',last_dialogue_context=last.get('context') if last else None,location=here,tiles=[tile(r,x+dx,y+dy) for dy in range(-2,3) for dx in range(-2,3)],penalty=penalty(p),mods={k:dict(label=v[0],skill=v[2],cost=12) for k,v in MODS.items()},contract_preview=preview)
+ return dict(contact=a,last_dialogue=last.get('response','') if last else '',last_dialogue_context=last.get('context') if last else None,last_dialogue_variation=last.get('variation','') if last else '',location=here,tiles=[tile(r,x+dx,y+dy) for dy in range(-2,3) for dx in range(-2,3)],penalty=penalty(p),mods={k:dict(label=v[0],skill=v[2],cost=12) for k,v in MODS.items()},contract_preview=preview)
 def act(r,p,d,check,log):
  check(r['mode']=='open' and r['started'],'Start an open-world room first.')
  if field_rules.active(r):return field_adventure.native(r,p,d,check,log)

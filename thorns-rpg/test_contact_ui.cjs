@@ -13,5 +13,6 @@ assert.equal(buttons.length,6);buttons[0].onclick();assert.equal(calls[0][0],'ow
 assert.ok(nodes.some(n=>n.className==='local-dialogue'&&n.textContent.includes('stated concern')));
 assert.ok(nodes.some(n=>n.className==='dim'&&n.textContent.includes('CONTEXT ONLY · LIVELIHOOD FIT / care work')));
 assert.ok(nodes.some(n=>n.className==='dim'&&n.textContent.includes('CONTEXT ONLY · RELATIONSHIP THREAD / '+fixture.state.players[0].overland.last_dialogue_context.relationship)));
+assert.ok(nodes.some(n=>n.className==='local-context-variation'&&n.textContent.includes('Care work frames the concern')));
 assert.ok(nodes.some(n=>n.textContent.includes('LOCAL CONTACT')));
-console.log('PASS: six dialogue topics, persisted response and context notes, local-contact designation and action wiring.');
+console.log('PASS: six dialogue topics, persisted response, context notes and authored variation, local-contact designation and action wiring.');

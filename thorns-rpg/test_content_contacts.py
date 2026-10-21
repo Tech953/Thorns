@@ -40,13 +40,17 @@ class ContactTests(unittest.TestCase):
         linked['players'][0]['character'].update(livelihood='field medic',relationship='I recognize '+faction)
         def check(ok,message):
             if not ok:raise ValueError(message)
-        for room in (plain,linked):
-            with patch('overland.secrets.randbelow',return_value=19):
+        with patch('overland.secrets.randbelow',return_value=19) as die:
+            for room in (plain,linked):
                 overland.speak(room,room['players'][0],overland.tile(room,0,0),'needs',check,lambda _r,_text:None)
+            self.assertEqual(die.call_count,2)
         a,b=plain['players'][0],linked['players'][0]
         self.assertEqual(a['dialogue_log'][-1]['response'],b['dialogue_log'][-1]['response'])
         self.assertEqual(a['dialogue_log'][-1]['context'],{'livelihood':[],'relationship':None})
         self.assertEqual(b['dialogue_log'][-1]['context'],{'livelihood':['care work'],'relationship':faction})
+        self.assertEqual(a['dialogue_log'][-1]['variation'],'')
+        self.assertIn('Care work frames the concern',b['dialogue_log'][-1]['variation'])
+        self.assertIn('names '+faction,b['dialogue_log'][-1]['variation'])
         for key in ['supplies','credits','grid','vitals','xp','contract','benefits']:
             self.assertEqual(a[key],b[key],key)
         self.assertEqual(plain['reputation'],linked['reputation'])

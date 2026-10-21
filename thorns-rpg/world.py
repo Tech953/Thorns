@@ -85,6 +85,34 @@ CONTACT_TOPIC_WORK_CONTEXTS={
  'contracts':{'route/survey work','records/research work','supply/trade work'},
  'plans':{'route/survey work','craft/repair work','records/research work','teaching/learning work','ecology/stewardship work'},
 }
+CONTACT_DIALOGUE_VARIATIONS={
+ 'place':{
+  'route/survey work':'Route work frames this approach as a partial path, not a complete map.',
+  'records/research work':'The local record is one account; it does not settle the whole region.',
+  'ecology/stewardship work':'These conditions are observations, not a guarantee of what lives or grows here.'},
+ 'needs':{
+  'craft/repair work':'A repair lens can clarify the stated need, but no tools or stock change hands in this conversation.',
+  'supply/trade work':'Trade experience can help compare the stated need; talking still transfers no stock.',
+  'care work':'Care work frames the concern, but this answer is not treatment.',
+  'ecology/stewardship work':'A stewardship lens may help interpret the request; no resources appear automatically.'},
+ 'history':{
+  'route/survey work':'A route record can anchor sequence while the wider history stays open.',
+  'records/research work':'The contact’s local record remains one source, not a complete account.',
+  'teaching/learning work':'A learner’s question can guide what to clarify, not what to conclude.'},
+ 'access':{
+  'route/survey work':'Route knowledge can clarify a boundary, but it does not open one.',
+  'records/research work':'A record can document the boundary; it cannot grant authority.'},
+ 'contracts':{
+  'route/survey work':'Survey experience can distinguish route evidence from delivery terms.',
+  'records/research work':'Record-keeping can check what is promised, not verify it before delivery.',
+  'supply/trade work':'Supply experience can help compare escrow and reward; acceptance remains a separate action.'},
+ 'plans':{
+  'route/survey work':'Route work can make a next step legible, not guarantee a safe crossing.',
+  'craft/repair work':'Repair work can suggest a practical sequence, but no materials are committed here.',
+  'records/research work':'Research can frame open questions without turning uncertainty into fact.',
+  'teaching/learning work':'Teaching can surface the next question; it does not assign a skill bonus.',
+  'ecology/stewardship work':'Stewardship can flag local conditions, not guarantee an outcome.'},
+}
 TEMPLATE_WORK_CONTEXTS={
  'pilgrims':{'route/survey work'},
  'salvage':{'craft/repair work','supply/trade work'},
@@ -139,6 +167,20 @@ def contract_context(character,faction,kind='Survey'):
 
 def contact_context(character,topic,faction):
     return character_context(character,CONTACT_TOPIC_WORK_CONTEXTS.get(topic,()),faction)
+
+
+def contact_dialogue_variation(context,topic):
+    """Authored narrative aside; never part of an NPC's claimed knowledge."""
+    parts=[]
+    for label in context.get('livelihood',()):
+        line=CONTACT_DIALOGUE_VARIATIONS.get(topic,{}).get(label)
+        if line:
+            parts.append(line)
+            break
+    faction=context.get('relationship')
+    if faction:
+        parts.append('Your character’s record names '+faction+'; this exchange creates no new commitment.')
+    return 'Narrative aside: '+' '.join(parts) if parts else ''
 
 
 def encounter_context(character,template_id,faction):
