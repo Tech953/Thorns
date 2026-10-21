@@ -4,6 +4,7 @@ from unittest.mock import patch
 import overland
 import server
 import test_game
+import world
 
 
 class ContactTests(unittest.TestCase):
@@ -50,11 +51,23 @@ class ContactTests(unittest.TestCase):
         self.assertEqual(b['dialogue_log'][-1]['context'],{'livelihood':['care work'],'relationship':faction})
         self.assertEqual(a['dialogue_log'][-1]['variation'],'')
         self.assertIn('Care work frames the concern',b['dialogue_log'][-1]['variation'])
-        self.assertIn('names '+faction,b['dialogue_log'][-1]['variation'])
+        self.assertIn(faction,b['dialogue_log'][-1]['variation'])
         for key in ['supplies','credits','grid','vitals','xp','contract','benefits']:
             self.assertEqual(a[key],b[key],key)
         self.assertEqual(plain['reputation'],linked['reputation'])
         self.assertEqual(plain['contacts']['0,0']['visitors'],linked['contacts']['0,0']['visitors'])
+
+    def test_all_six_topics_have_authored_context_variations(self):
+        samples=[('place','Cartographer'),('needs','Field medic'),('history','Archivist'),
+                 ('access','Surveyor'),('contracts','Trader'),('plans','Mechanic')]
+        for topic,livelihood in samples:
+            context=world.contact_context(
+                {'livelihood':livelihood,'relationship':'I know Sap Core'},
+                topic,'Sap Core')
+            self.assertTrue(context['livelihood'],topic)
+            variation=world.contact_dialogue_variation(context,topic)
+            self.assertTrue(variation.startswith('Narrative aside:'),topic)
+            self.assertIn('Sap Core',variation,topic)
 
     def test_site_limit_blocks_new_movement_and_preserves_current_position(self):
         self.open();r=server.fetch(self.host['code'])

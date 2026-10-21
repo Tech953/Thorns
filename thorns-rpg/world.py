@@ -113,6 +113,14 @@ CONTACT_DIALOGUE_VARIATIONS={
   'teaching/learning work':'Teaching can surface the next question; it does not assign a skill bonus.',
   'ecology/stewardship work':'Stewardship can flag local conditions, not guarantee an outcome.'},
 }
+CONTACT_RELATIONSHIP_VARIATIONS={
+ 'place':'The mention of {faction} in your character record does not extend this local map.',
+ 'needs':'The mention of {faction} does not turn this stated need into a debt or supply transfer.',
+ 'history':'The mention of {faction} belongs to your character’s account, not this contact’s local history.',
+ 'access':'The mention of {faction} does not alter this boundary or grant authority.',
+ 'contracts':'The mention of {faction} adds no promise or term to this survey contract.',
+ 'plans':'The mention of {faction} creates no commitment for this plan.',
+}
 TEMPLATE_WORK_CONTEXTS={
  'pilgrims':{'route/survey work'},
  'salvage':{'craft/repair work','supply/trade work'},
@@ -178,8 +186,9 @@ def contact_dialogue_variation(context,topic):
             parts.append(line)
             break
     faction=context.get('relationship')
-    if faction:
-        parts.append('Your character’s record names '+faction+'; this exchange creates no new commitment.')
+    relationship_line=CONTACT_RELATIONSHIP_VARIATIONS.get(topic)
+    if faction and relationship_line:
+        parts.append(relationship_line.format(faction=faction))
     return 'Narrative aside: '+' '.join(parts) if parts else ''
 
 
