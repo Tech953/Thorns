@@ -144,7 +144,11 @@ def mutate(d):
    check(not r['started'],'Character editing locks when the expedition starts.')
    role=d.get('role',p['role'])
    check(isinstance(role,str) and role in ROLES,'Invalid discipline.')
-   updated=characters.validate(d.get('character'),role)
+   current=characters.ensure(p);incoming=d.get('character')
+   old_skills={k:v for k,v in current.get('skills',{}).items() if v}
+   new_skills={k:v for k,v in incoming.get('skills',{}).items() if v} if isinstance(incoming,dict) and isinstance(incoming.get('skills'),dict) else None
+   keep_legacy_training=(role==p['role'] and current.get('schema',1)==1 and sum(old_skills.values())<6 and isinstance(incoming,dict) and incoming.get('schema',1)==1 and new_skills==old_skills)
+   updated=characters.validate(incoming,role,allow_legacy_training=keep_legacy_training)
    name=d.get('name',p['name'])
    check(isinstance(name,str) and 0<len(name.strip())<=24 and all(ord(c)>=32 for c in name),'Invalid character name.')
    p.update(name=name.strip(),role=role,character=updated,composure=6+2*updated['attributes']['body'])

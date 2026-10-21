@@ -1,4 +1,4 @@
-"""Character rules v1. Numerical scales are game adaptations, not source canon."""
+"""Character rules v2. Numerical scales are game adaptations, not source canon."""
 import copy
 from content import ROLES
 ATTRIBUTES={'body':'Physical resilience, movement and practical execution.','tech':'Craft, repair, node integration and technical control.','percept':'Observation, pattern discrimination and environmental interpretation.','rapport':'Negotiation, teaching, cooperation and voluntary communication.'}
@@ -60,26 +60,32 @@ def text(value,limit):
  require(len(value)<=limit and all(ord(c)>=32 or c in '\n\t' for c in value),'Character text is too long or contains control characters.')
  return value.strip()
 def default(role,legacy=False):
- return dict(schema=1,pronouns='',origin=ORIGINS[0],form='Metal-kin' if role=='Metal-kin Artisan' else FORMS[0],affiliation=AFFILIATIONS[0],affinity=AFFINITIES[0],bio='',goal='',boundary='',appearance='',voice='',mannerisms='',age='',attributes=copy.deepcopy(ROLES[role]),skills={} if legacy else copy.deepcopy(PRESETS[role]),mod='none',legacy=legacy)
-def validate(raw,role):
+ return dict(schema=1 if legacy else 2,pronouns='',origin=ORIGINS[0],form='Metal-kin' if role=='Metal-kin Artisan' else FORMS[0],affiliation=AFFILIATIONS[0],affinity=AFFINITIES[0],livelihood='',question='',relationship='',bio='',goal='',boundary='',appearance='',voice='',mannerisms='',age='',attributes=copy.deepcopy(ROLES[role]),skills={} if legacy else copy.deepcopy(PRESETS[role]),mod='none',legacy=legacy)
+def validate(raw,role,allow_legacy_training=False):
  require(type(raw)==dict,'Character must be an object.')
  base=default(role)
  require(set(raw)<=set(base)-{'legacy'},'Unexpected character field. XP and credentials are server-managed.')
- require(raw.get('schema',1)==1,'Unsupported character version.')
+ require(raw.get('schema',1) in (1,2),'Unsupported character version.')
  base.update(raw);base['legacy']=False
- for field,limit in [('pronouns',40),('bio',700),('goal',200),('boundary',200),('appearance',1000),('voice',500),('mannerisms',500),('age',50)]:base[field]=text(base[field],limit)
+ for field,limit in [('pronouns',40),('livelihood',200),('question',300),('relationship',300),('bio',700),('goal',200),('boundary',200),('appearance',1000),('voice',500),('mannerisms',500),('age',50)]:base[field]=text(base[field],limit)
  for field,items in [('origin',ORIGINS),('form',FORMS),('affiliation',AFFILIATIONS),('affinity',AFFINITIES),('mod',MODS)]:
   require(isinstance(base[field],str) and base[field] in items,'Invalid '+field+'.')
  a=base['attributes'];require(type(a)==dict and set(a)==set(ATTRIBUTES),'Provide all four attributes.')
  require(all(type(v)==int and 1<=v<=4 for v in a.values()) and sum(a.values())==8,'Attributes must be integers 1–4 totaling 8.')
  sk=base['skills'];require(type(sk)==dict and set(sk)<=set(SKILLS),'Unknown proficiency.')
  require(all(type(v)==int and 0<=v<=3 for v in sk.values()) and sum(sk.values())<=6,'Proficiencies must be integers 0–3 totaling at most 6.')
+ legacy_budget=allow_legacy_training and raw.get('schema',1)==1 and sum(sk.values())<6
+ require(sum(sk.values())==6 or legacy_budget,'New characters must allocate exactly 6 proficiency points.')
+ base['schema']=1 if legacy_budget else 2
  base['skills']={k:v for k,v in sk.items() if v}
  return base
 
 def ensure(p):
  if 'character' not in p:p['character']=default(p['role'],legacy=True)
- return p['character']
+ c=p['character']
+ c.setdefault('schema',1)
+ for field in ('pronouns','livelihood','question','relationship','bio','goal','boundary','appearance','voice','mannerisms','age'):c.setdefault(field,'')
+ return c
 def sheet(p,r):
  c=copy.deepcopy(ensure(p)); xp=min(2,p['xp']//3)
  c['xp']=p['xp'];c['experience_bonus']=xp;c['baseline_totals']={k:v+xp for k,v in c['attributes'].items()}
@@ -112,4 +118,4 @@ def breakdown(p,r,choice):
  return dict(attribute=base,experience=xp,proficiency=training,proficiency_name=SKILLS[key]['label'] if rank else 'None applicable',mod=mb,practice=practice,findings=discovery,total=total,success_percent=chance)
 
 def catalog():
- return dict(schema=1,attributes=ATTRIBUTES,origins=ORIGINS,forms=FORMS,affiliations=AFFILIATIONS,affinities=AFFINITIES,mods=MODS,skills=SKILLS,roles=ROLES,presets={r:default(r) for r in ROLES})
+ return dict(schema=2,attributes=ATTRIBUTES,origins=ORIGINS,forms=FORMS,affiliations=AFFILIATIONS,affinities=AFFINITIES,mods=MODS,skills=SKILLS,roles=ROLES,presets={r:default(r) for r in ROLES})

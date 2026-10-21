@@ -38,9 +38,12 @@ poll();setInterval(()=>{if(!busy)poll();},1500);
 function renderWorld(){
  $('edit-character').hidden=state.started;
  $('sheets').replaceChildren();
- for(const p of state.players){const s=p.sheet,wrap=node('div','','sheet');wrap.append(node('h3',p.name+(s.pronouns?' / '+s.pronouns:'')));
-  const lines=[`${p.role} · ${s.origin} · ${s.form}`,`Affiliation: ${s.affiliation}. Affinity: ${s.affinity}.`,Object.entries(s.attributes).map(([k,v])=>`${k.toUpperCase()} ${v}`).join(' / '),`XP ${s.xp} · experience bonus +${s.experience_bonus} · unspent training ${s.unspent_training}`,`Proficiencies: ${Object.entries(s.skills).map(([k,v])=>`${Creator.catalog?.skills[k]?.label||k} ${v}`).join('; ')||'None'}`,`Mod: ${Creator.catalog?.mods[s.mod]?.label||s.mod} — ${s.mod_status}`,`History: ${s.bio||'Unspecified'}`,`Goal: ${s.goal||'Unspecified'}`,`Boundaries: ${s.boundary||'Unspecified'}`,`Conditions: ${s.conditions.join(', ')}`,`Permissions: ${Object.entries(s.certifications).map(([k,v])=>k+': '+v).join('; ')}`];
-  lines.forEach(l=>wrap.append(node('p',l)));$('sheets').append(wrap);
+  for(const p of state.players){const s=p.sheet,wrap=node('div','','sheet');wrap.append(node('h3',p.name+(s.pronouns?' / '+s.pronouns:'')));
+   const lines=[`${p.role} · ${s.origin} · ${s.form}`,`Affiliation: ${s.affiliation}. Affinity: ${s.affinity}.`,Object.entries(s.attributes).map(([k,v])=>`${k.toUpperCase()} ${v}`).join(' / '),`XP ${s.xp} · experience bonus +${s.experience_bonus} · unspent training ${s.unspent_training}`,`Proficiencies: ${Object.entries(s.skills).map(([k,v])=>`${Creator.catalog?.skills[k]?.label||k} ${v}`).join('; ')||'None'}`,`Mod: ${Creator.catalog?.mods[s.mod]?.label||s.mod} — ${s.mod_status}`,`Conditions: ${s.conditions.join(', ')}`,`Permissions: ${Object.entries(s.certifications).map(([k,v])=>k+': '+v).join('; ')}`];
+   lines.forEach(l=>wrap.append(node('p',l)));
+   const story=[['Age',s.age],['Livelihood',s.livelihood],['Appearance',s.appearance],['Voice',s.voice],['Mannerisms',s.mannerisms],['History',s.bio],['Goal',s.goal],['Unanswered question',s.question],['Important relationship or promise',s.relationship],['Boundaries',s.boundary]].filter(([,v])=>typeof v==='string'&&v.trim());
+   if(story.length){const details=document.createElement('details');details.append(node('summary','CHARACTER STORY / PRESENTATION'));for(const [label,value]of story)details.append(node('p',`${label}: ${value}`));wrap.append(details);}
+   $('sheets').append(wrap);
  }
  $('reputation').replaceChildren();for(const [f,v]of Object.entries(state.reputation))$('reputation').append(node('div',`${f}: ${v>0?'+':''}${v} / ${state.reputation_tiers[f]}`,'rep-row'));
  $('rep-log').replaceChildren(...state.rep_log.slice(-8).reverse().map(x=>node('p',`${x.faction} ${x.change>=0?'+':''}${x.change}: ${x.reason}`)));
@@ -50,7 +53,7 @@ function renderWorld(){
  const me=state.duels.find(d=>d.players.includes(session.id));$('duel-status').textContent=me?(me.accepted?'Mutual duel active. Either player may end it.':'Invitation pending. Only the invited player may accept.'):'No active duel or invitation.';
  for(const id of ['challenge','accept','disengage','duel-action','local-speak'])$(id).disabled=!state.started||!others.length||!state.scene.choices.length;
 }
-$('edit-character').onclick=async()=>{try{await Creator.init;const p=state.players.find(p=>p.id===session.id);Creator.set(p.role,p.character);Creator.editing=true;$('builder').hidden=false;$('build-apply').hidden=false;$('build-cancel').hidden=false;$('builder').scrollIntoView();}catch(e){error(e);}};
+$('edit-character').onclick=async()=>{try{await Creator.init;const p=state.players.find(p=>p.id===session.id);Creator.set(p.role,p.character,{allowLegacyTraining:true});Creator.editing=true;$('builder').hidden=false;$('build-apply').hidden=false;$('build-cancel').hidden=false;$('builder').scrollIntoView();}catch(e){error(e);}};
 $('build-cancel').onclick=()=>{Creator.editing=false;$('builder').hidden=true;};
 $('build-apply').onclick=async()=>{try{const c=Creator.read();await action('character',{role:Creator.role(),character:c});}catch(e){error(e);}};
 $('move-left').onclick=()=>action('move',{step:-1});$('move-right').onclick=()=>action('move',{step:1});
