@@ -5,6 +5,7 @@
 - Show optional story and presentation details in a separate party-sheet disclosure.
 - Add deterministic, informational livelihood and named-relationship context to survey contracts and procedural encounters, plus authored asides in local-contact dialogue without changing game mechanics.
 - Give contract and encounter context notes deterministic, activity-specific narrator asides; keep them separate from participant dialogue and mechanically inert.
+- Show one context presentation at a time: prefer an authored aside over duplicate tag labels, with a tag fallback for older saved records.
 
 # 0.6.0 — Field Guide systems integration
 

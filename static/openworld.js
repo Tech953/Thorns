@@ -19,25 +19,28 @@ window.renderOpenWorld=function(){
   if(context?.relationship)lines.push(`RELATIONSHIP THREAD / ${context.relationship}`);
   return lines;
  }
- function showContext(context,parent=pane){for(const line of contextLines(context))parent.append(node('p',`CONTEXT ONLY · ${line}`,'dim'));}
+ function showContext(context,variation='',parent=pane){
+  if(variation){parent.append(node('p',variation,'local-context-variation'));return;}
+  for(const line of contextLines(context))parent.append(node('p',`CONTEXT ONLY · ${line}`,'dim'));
+ }
  for(const [label,dx,dy] of [['↑ NORTH',0,-1],['← WEST',-1,0],['EAST →',1,0],['↓ SOUTH',0,1]])button(label,'ow_move',{dx,dy});pane.append(buttons);
  pane.append(node('p',`${state.hardcore?'HARDCORE':'STANDARD'} · Hunger ${p.vitals.hunger} · Thirst ${p.vitals.thirst} · Sleep debt ${p.vitals.sleep} · Check penalty ${o.penalty}\nInjuries: ${p.vitals.injuries.join(', ')||'none'} · Ailments: ${p.vitals.ailments.join(', ')||'none'}\n${guide?'Energy '+p.vitals.energy+' · Scrap '+p.supplies.scrap:'Credits '+p.credits} · Karma ${p.karma} · Care benefit tier ${p.benefits}/3`));
  pane.append(node('h3','FIELD PROVISIONS'));const supplies=node('div','','button-row');for(const item of ['food','water','medkit']){button(`USE ${item} (${p.supplies[item]})`,'ow_consume',{item},supplies);button(guide?`LOCAL ${item} / ACTUAL STOCK`:`BUY ${item} (${item==='medkit'?6:2} cr)`,'ow_buy',{item},supplies);}pane.append(supplies);
  pane.append(node('h3','REST AND CARE'));const care=node('div','','button-row');button('REST / sanctuary','ow_rest',{},care);button(guide?'SANCTUARY / LOCAL CARE':'CLINIC / discounted care','ow_clinic',{},care);button('SCAVENGE / wilds, ruins','ow_scavenge',{},care);pane.append(care);
- if(l.depth<40){pane.append(node('h3',o.contact?`${o.contact.name} / LOCAL CONTACT`:'LOCAL CONTACT'));const dialogue=node('div','','button-row');for(const topic of ['place','needs','history','access','contracts','plans'])button(`ASK / ${topic.toUpperCase()}`,'ow_talk',{topic},dialogue);pane.append(dialogue);if(o.last_dialogue){pane.append(node('p',o.last_dialogue,'local-dialogue'));showContext(o.last_dialogue_context);if(o.last_dialogue_variation)pane.append(node('p',o.last_dialogue_variation,'local-context-variation'));if(contextLines(o.last_dialogue_context).length)pane.append(node('p','These links do not change replies, checks, standing, or access.','dim'));}}
+  if(l.depth<40){pane.append(node('h3',o.contact?`${o.contact.name} / LOCAL CONTACT`:'LOCAL CONTACT'));const dialogue=node('div','','button-row');for(const topic of ['place','needs','history','access','contracts','plans'])button(`ASK / ${topic.toUpperCase()}`,'ow_talk',{topic},dialogue);pane.append(dialogue);if(o.last_dialogue){pane.append(node('p',o.last_dialogue,'local-dialogue'));showContext(o.last_dialogue_context,o.last_dialogue_variation);if(contextLines(o.last_dialogue_context).length)pane.append(node('p',o.last_dialogue_variation?'This aside does not change replies, checks, standing, or access.':'These character links do not change replies, checks, standing, or access.','dim'));}}
  pane.append(node('h3','CONTRACT BOARD'));
  const contracts=node('div','','button-row');
  if(p.contract){
   pane.append(node('p',`${p.contract.kind} · target [${p.contract.target}] · ${p.contract.faction} · ${p.contract.reward}${guide?'':' credits + reputation + care discount'}`));
-  showContext(p.contract.context);if(p.contract.variation)pane.append(node('p',p.contract.variation,'local-context-variation'));button('ATTEMPT SURVEY AT TARGET','ow_complete',{},contracts);button('ABANDON / -1 karma and reputation','ow_abandon',{},contracts);
+  showContext(p.contract.context,p.contract.variation);button('ATTEMPT SURVEY AT TARGET','ow_complete',{},contracts);button('ABANDON / -1 karma and reputation','ow_abandon',{},contracts);
  }else{
   const offer=o.contract_preview;
-   if(offer){pane.append(node('p',`OFFER / ${offer.kind} · issuer ${offer.faction} · ${offer.description}`));showContext(offer.context);if(offer.variation)pane.append(node('p',offer.variation,'local-context-variation'));}
+   if(offer){pane.append(node('p',`OFFER / ${offer.kind} · issuer ${offer.faction} · ${offer.description}`));showContext(offer.context,offer.variation);}
   button('ACCEPT SURVEY CONTRACT','ow_contract',{},contracts);
  }
- pane.append(contracts,node('p','Context links use whole-phrase livelihood terms and named issuer matches. They never change offer availability, checks, rewards, standing, or permissions.','dim'));
+  pane.append(contracts,node('p','Background notes come from exact livelihood and issuer matches. They never change offer availability, checks, rewards, standing, or permissions.','dim'));
  const mods=node('details','');mods.append(node('summary',`BIO-MOD CLINIC / ${p.loadout.length}/3 slots`),node('p',guide?'Installation consumes two real scrap at a bounded craft service; removal is free.':'Installation costs 12 credits at a clinic or sanctuary; removal is free. These permits cover bounded prototype equipment only.'));
  for(const [id,m]of Object.entries(o.mods))button(`${p.loadout.includes(id)?'INSTALLED · REMOVE':guide?'INSTALL · 2 SCRAP':'INSTALL · 12 cr'} ${m.label} / ${m.skill}`,'ow_mod',{mod:id},mods);pane.append(mods);
-  if(p.event){const e=p.event,box=node('section','','encounter');box.append(node('h3',e.title),node('p',`${e.body}\n${e.faction} · DC ${e.dc}`));showContext(e.context,box);if(e.variation)box.append(node('p',e.variation,'local-context-variation'));e.approaches.forEach((a,i)=>button(`${a[0]} / ${a[1]} + ${a[2]}`,'ow_encounter',{choice:i},box));button('DECLINE ENCOUNTER','ow_encounter',{choice:3},box);pane.prepend(box);}
+  if(p.event){const e=p.event,box=node('section','','encounter');box.append(node('h3',e.title),node('p',`${e.body}\n${e.faction} · DC ${e.dc}`));showContext(e.context,e.variation,box);e.approaches.forEach((a,i)=>button(`${a[0]} / ${a[1]} + ${a[2]}`,'ow_encounter',{choice:i},box));button('DECLINE ENCOUNTER','ow_encounter',{choice:3},box);pane.prepend(box);}
 };
 if(state)renderOpenWorld();
