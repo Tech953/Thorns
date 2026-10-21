@@ -11,10 +11,11 @@ async function main(){
   const port=await new Promise((res,rej)=>{host.stdout.once('data',b=>res(Number(String(b).trim())));host.once('error',rej);host.once('exit',c=>rej(Error('host '+c+' '+errors)));});
   const all=[];
   class Element{
-   constructor(tag,text=''){this.tagName=tag.toUpperCase();this.children=[];this.parentElement=null;this.dataset={};this.attrs={};this.hidden=false;this.disabled=false;this.value='';this.className='';this.style={};this.id='';this.name='';this._text=text;this.checked=false;this.classList={toggle:(x,v)=>{},add:()=>{},remove:()=>{}};all.push(this);}
+   constructor(tag,text=''){this.tagName=tag.toUpperCase();this.children=[];this.parentElement=null;this.dataset={};this.attrs={};this.hidden=false;this.open=false;this.disabled=false;this.value='';this.className='';this.style={};this.id='';this.name='';this._text=text;this.checked=false;this.classList={toggle:(x,v)=>{},add:()=>{},remove:()=>{}};all.push(this);}
    get textContent(){return this._text+this.children.map(c=>c.textContent??'').join('');}
    set textContent(v){this._text=String(v);this.children=[];}
-   append(...nodes){for(const n of nodes){if(n&&typeof n==='object')n.parentElement=this;this.children.push(n);if(this.tagName==='SELECT'&&!this.value&&n.tagName==='OPTION')this.value=n.value;}}
+   append(...nodes){for(const n of nodes){if(n&&typeof n==='object'){if(n.parentElement){const siblings=n.parentElement.children,index=siblings.indexOf(n);if(index>=0)siblings.splice(index,1);}n.parentElement=this;}this.children.push(n);if(this.tagName==='SELECT'&&!this.value&&n.tagName==='OPTION')this.value=n.value;}}
+   insertBefore(n,ref){if(n.parentElement){const siblings=n.parentElement.children,index=siblings.indexOf(n);if(index>=0)siblings.splice(index,1);}const i=this.children.indexOf(ref);if(i<0)return this.append(n);n.parentElement=this;this.children.splice(i,0,n);return n;}
    replaceChildren(...nodes){this.children=[];this._text='';this.append(...nodes);}
    setAttribute(k,v){this.attrs[k]=String(v);if(k==='class')this.className=v;}
    removeAttribute(k){delete this.attrs[k];}
@@ -40,13 +41,14 @@ async function main(){
   const run=name=>vm.runInContext(fs.readFileSync(path.join(root,'static',name),'utf8'),ctx,{filename:name});
   run('creator.js');run('field-guide.js');run('app.js');if(!stem)run('openworld.js');
   if(stem){for(let i=0;i<100&&!ctx.StemCreator.ready;i++)await new Promise(r=>setTimeout(r,10));assert.ok(ctx.StemCreator.ready);ids('name').value='Stem UI Witness';ids('seed').value='field-ui';await ids('join-form').requestSubmit();}
-  else{await ctx.Creator.init;const form=ids('create');const name=all.find(e=>e.name==='name'&&e.parentElement?.parentElement===form);assert.ok(name);name.value='Thorns UI Witness';const mode=all.find(e=>e.name==='mode');mode.value='open';await form.requestSubmit();}
+  else{await ctx.Creator.init;assert.ok(ids('build-story'),'character story disclosure exists');assert.equal(ids('build-story').open,false,'character story starts collapsed');const form=ids('create');const name=all.find(e=>e.name==='name'&&e.parentElement?.parentElement===form);assert.ok(name);name.value='Thorns UI Witness';const mode=all.find(e=>e.name==='mode');mode.value='open';await form.requestSubmit();}
   assert.equal(ids('game').hidden,false,'game visible: '+ids('error').textContent);assert.ok(ids('field-guide-panel').textContent.includes('FIELD GUIDE'));
   await ids('start').click();
+  if(!stem){assert.equal(ids('ow-provisions').open,true,'provisions are visible by default');assert.equal(ids('ow-care').open,false,'secondary actions start grouped');ids('ow-care').open=true;}
   const panel=()=>ids('field-guide-panel');
   function findButton(text){const walk=n=>{if(n.tagName==='BUTTON'&&n._text===text)return n;for(const c of n.children){const found=walk(c);if(found)return found;}return null;};const e=walk(panel());assert.ok(e,'missing button '+text+' '+panel().textContent);return e;}
   assert.ok(panel().textContent.includes('Controlled interface scenario'));
-  await findButton('DRINK / 1 WATER').click();assert.ok(panel().textContent.includes('ACTIVE CYCLE 1'));
+  await findButton('DRINK / 1 WATER').click();assert.ok(panel().textContent.includes('ACTIVE CYCLE 1'));if(!stem)assert.equal(ids('ow-care').open,true,'expanded open-world section survives state refresh');
   await findButton('BEGIN LOCAL TURNS').click();assert.ok(panel().textContent.includes('ROUND 1'));
   await findButton('APPROACH / 1 AP').click();await findButton('APPROACH / 1 AP').click();
   await findButton('STAFF / 3 AP').click();assert.ok(panel().textContent.includes('ENCOUNTER CLOSED'));
@@ -56,7 +58,7 @@ async function main(){
   await findButton('REPAIR FIELD STAFF / 1 SCRAP').click();assert.ok(panel().textContent.includes('100/100'));
   await findButton('SPEND A WATCH / 4 CYCLES').click();assert.ok(panel().textContent.includes('ACTIVE CYCLE 8'));
   await vm.runInContext('poll()',ctx);assert.equal(ids('error').textContent,'');
-  console.log(JSON.stringify({game:stem?'Stem':'Thorns',ui_flows:10,checks:['creator','start','provision cycle','fixed turn order','hex approach','AP attack','finite salvage','wear and repair','shared watch','poll persistence'],renderer:'DOM harness with real HTTP; graphical browser unavailable'}));
+  console.log(JSON.stringify({game:stem?'Stem':'Thorns',ui_flows:11,checks:['creator disclosure','start','open-world sections','expanded section retention','provision cycle','fixed turn order','hex approach','AP attack','finite salvage','wear and repair','shared watch','poll persistence'],renderer:'DOM harness with real HTTP; graphical browser unavailable'}));
  }finally{host.kill('SIGTERM');fs.rmSync(tmp,{recursive:true,force:true});}
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

@@ -21,3 +21,11 @@ body{background:radial-gradient(ellipse at 60% 15%,var(--wash) 0,var(--bg) 65%)}
 .field-guide .field-prose{line-height:1.65}
 .field-guide button:focus-visible,.field-guide select:focus-visible{outline:2px solid currentColor;outline-offset:3px}
 @media(max-width:600px){.field-guide{padding:.65rem}.field-guide .button-row button{flex:1 1 12rem}}
+.builder-optional{border:1px solid var(--line);padding:0 14px 14px;margin:20px 0}
+.builder-optional>summary{padding:12px 0;font-weight:bold}
+.builder-optional[open]>summary{border-bottom:1px solid var(--line);margin-bottom:12px}
+#openworld>details{border:1px solid var(--line);padding:0 14px 12px;margin:14px 0;background:var(--panel)}
+#openworld>details>summary{padding:13px 0;font-weight:bold}
+#openworld>details[open]>summary{border-bottom:1px solid var(--line);margin-bottom:10px}
+#openworld>details .button-row{margin:10px 0 4px}
+@media(max-width:600px){.builder-optional{padding:0 10px 10px}#openworld>details{padding:0 10px 10px}}
