@@ -1,0 +1,541 @@
+{
+  "schema": 1,
+  "project": "Thorns",
+  "saved_version": "0.6.0",
+  "import_date": "2026-10-20",
+  "source_archive": "THORNS-RPG-Prototype.zip",
+  "source_archive_sha256": "925f15029e8d49bcd7e088e3e3ef2418f6e0a96562941fcc33a63d1ddb5bac99",
+  "original_archive_files": 53,
+  "original_archive_coverage": "100% byte-for-byte",
+  "physics_lab_source_commit": null,
+  "physics_lab_tracked_files": 0,
+  "python_syntax_files_checked": 17,
+  "scope": "All listed files plus this manifest. Existing remote-only files are preserved and verified separately during publication.",
+  "files": [
+    {
+      "path": "README.md",
+      "size_bytes": 1149,
+      "sha256": "f252e6ca3b7171798a2df66f6306223ec5220dde261b676e0c79c8512a0b2c1a",
+      "git_blob_sha": "7de33dcd4e35e9254996573911d3a3332394ac30",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/CHANGELOG.md",
+      "size_bytes": 834,
+      "sha256": "d66438c5f7c65eef01ab78f575dca2d9957deb8581e7dc895866698f9e6d6432",
+      "git_blob_sha": "3d15efa68a084436de4d9b67e2416ed46fc6703c",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/CONTENT-GENERATION-REFINEMENT.md",
+      "size_bytes": 6339,
+      "sha256": "e0c0d65f84d1bb179606d2c8e1f5509c487bfdb6ea7cd64a6b2a9814bab84dd7",
+      "git_blob_sha": "5c935b8615b384f06f6a86455c48e5c093c67a5e",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/CONTENT-GENERATION-VALIDATION.json",
+      "size_bytes": 1649,
+      "sha256": "65a922499ea250428e8cbd8884aa6414c0dc2e0f59e12978362de005a9541c41",
+      "git_blob_sha": "f1da807574f70ffa901799789497d0da2fe1dc9d",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/FIELD-GUIDE-UPDATE.md",
+      "size_bytes": 14119,
+      "sha256": "40f12a83547b4f24992137e7d2beac6d79eb4e710729ad874952828fc9677297",
+      "git_blob_sha": "8fa55b499ae3d10fa178bedf266ed8ba669dbff6",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/FIELD-GUIDE-VALIDATION.json",
+      "size_bytes": 1343,
+      "sha256": "6c4194cc1aca49863217fc95ddfd46730572672d30bb0d64741d0919beb89c25",
+      "git_blob_sha": "03f951d63a5d8e81f36725515243c28c5709b22f",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/FIELD-GUIDE-VALIDATION.md",
+      "size_bytes": 3153,
+      "sha256": "1bd33f8ba264b4768aba10c228adf10c386f46ae3b14617c3f7d3e5f68e034d2",
+      "git_blob_sha": "3d843f65516b310d49b1eaabd6891dce656ac47e",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/OPEN-WORLD-GUIDE.md",
+      "size_bytes": 6466,
+      "sha256": "03da9ea85acd3a0141c3adf3810519109c73aa4c620b10a38d400d64be34ad0a",
+      "git_blob_sha": "18d83cdb78dfb623c631b0405e58a8dcf486db6d",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/PRESENTATION-AUDIT.md",
+      "size_bytes": 9122,
+      "sha256": "e30e018579cb05e08cff7df043b12c2ef1fe576184e2c46abb640167cb1338d8",
+      "git_blob_sha": "65edd321cd038d45ec7005b1727ca3e2ddbdbaf9",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/PROJECT-README.md",
+      "size_bytes": 3411,
+      "sha256": "4d4618775e3737c5a5fe483f2a9404c0e9d68e7f44caf3c5f51cc99425b6a4b2",
+      "git_blob_sha": "e2d7ca1a347e8eb29c9769b30a6bc2ad1cbbdb40",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/README-HISTORY.md",
+      "size_bytes": 9105,
+      "sha256": "78499a310ade60c35052c14ba700c93f36bcc812f22646e6fd5cb60638cec9e9",
+      "git_blob_sha": "26344bdb308a410af19c9c07e3e61b75c7ef275b",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/README.md",
+      "size_bytes": 1837,
+      "sha256": "8c13f03583a22b3016fa6ffdfa6197611cefd02f7bfddf452881bc50e273b19d",
+      "git_blob_sha": "4e4c93906493d38150d473b0d2238bcb9ef48c74",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/SOURCE-CROSSWALK.md",
+      "size_bytes": 3997,
+      "sha256": "68b85e2f844523ef04d7194c4a9bc7e1fc84d8528d7548612f5edb575d1924a5",
+      "git_blob_sha": "c3a484f4e6f7614f077e7616aca0e2b1e85d6e63",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/SYSTEMS-GUIDE.md",
+      "size_bytes": 12336,
+      "sha256": "02731dec52c075765b0f04ebdb881e66211a3e71f4b8825e3d62da7bfe0e23b1",
+      "git_blob_sha": "08ca218998fe8c63a19ef28ba855a5f27d91332d",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/SYSTEMS-UPDATE-2026-10-18.md",
+      "size_bytes": 2906,
+      "sha256": "e5fdf0f77b10996369da0218f2cd134795f96086f8e50ab4123657e30cf0e6a7",
+      "git_blob_sha": "0f2a3d3e632eede99a52f7be4bca8c59037ac374",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/VALIDATION.md",
+      "size_bytes": 958,
+      "sha256": "fb2b038138a7c25aea25428dbfe6077f57222fae06b35b50de58f883882c27ff",
+      "git_blob_sha": "4d0fc077f4cc97e72bff30dc1e2313697ac4f297",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/WINDOWS-BUILD.md",
+      "size_bytes": 1663,
+      "sha256": "7102dc564165ff40ca305e035b7c9f405b80887197e7807a81d7ad7a761e12c8",
+      "git_blob_sha": "7acf05e9977e3376c64bd04ff736b02c16753e51",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/import-manifest.json",
+      "size_bytes": 7509,
+      "sha256": "0fdf2f88026e510e7c7e56c98eae35c2002e6fd4e1a401843502c667f2dbc5af",
+      "git_blob_sha": "1af9ff21b8bd6a41c86a38cdb39175661b7f3377",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/reference-data/creature_catalog.json",
+      "size_bytes": 59695,
+      "sha256": "c256c0f95113750e77e49248247f2e393c1b2466d61ecc0b749c39c87a2b1f5c",
+      "git_blob_sha": "fbf047f48d2e7b7df8a7981a8ae2622a4deb49b8",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/shared/Thorns-Stem-Rose-Character-Sheet.pdf",
+      "size_bytes": 253181,
+      "sha256": "d2920278171ce94157e669d9eb2839e75c4a30e205f78c5646b6f49dc9d5f3c3",
+      "git_blob_sha": "6d89951d334ad5f8976089ebd2a44b9bc95866f7",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/shared/Thorns-Stem-Rose-Creature-and-Stat-Guide.pdf",
+      "size_bytes": 571272,
+      "sha256": "d5524dbe1b2802c72b44896338eba6e9161c0a55edf67e0520a9f4307f121baa",
+      "git_blob_sha": "a2027cd6efb4371176d70e80033fba3055aabd3b",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/shared/Thorns-Stem-Rose-Encounter-Toolkit.pdf",
+      "size_bytes": 77151,
+      "sha256": "f49071f0829fef72d73eb5a3fe679a5d3375e6aaeae5f7b04ac2d88de39bcc07",
+      "git_blob_sha": "0c204e26275515264218f8f4a4dc83649ac27325",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/.dockerignore",
+      "size_bytes": 22,
+      "sha256": "4923a94656d5599a9c4f4c32c6b18b1eedc07e65bdefca6f56765bd4a9e93654",
+      "git_blob_sha": "4387690197751db7716172919e83409e54cf9c5b",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/Build-Windows.bat",
+      "size_bytes": 592,
+      "sha256": "52f40b3021b1c25718269dc0b0dc2b40a337d79c6a5ceaae3e6b0706b3b501c7",
+      "git_blob_sha": "f12a51f29eca945219e23cea73b561f14eb4c407",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/CHANGELOG.md",
+      "size_bytes": 834,
+      "sha256": "d66438c5f7c65eef01ab78f575dca2d9957deb8581e7dc895866698f9e6d6432",
+      "git_blob_sha": "3d15efa68a084436de4d9b67e2416ed46fc6703c",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/CONTENT-GENERATION-REFINEMENT.md",
+      "size_bytes": 6339,
+      "sha256": "e0c0d65f84d1bb179606d2c8e1f5509c487bfdb6ea7cd64a6b2a9814bab84dd7",
+      "git_blob_sha": "5c935b8615b384f06f6a86455c48e5c093c67a5e",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/CONTENT-GENERATION-VALIDATION.json",
+      "size_bytes": 1649,
+      "sha256": "65a922499ea250428e8cbd8884aa6414c0dc2e0f59e12978362de005a9541c41",
+      "git_blob_sha": "f1da807574f70ffa901799789497d0da2fe1dc9d",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/Dockerfile",
+      "size_bytes": 199,
+      "sha256": "6eeb00a4942f5b2aaaa0097353319b86dd34f8d5f9296cbeca8599a3c1e31f4f",
+      "git_blob_sha": "d3d1553d14bce6202ffae317e81faeecee8c7430",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/FIELD-GUIDE-UPDATE.md",
+      "size_bytes": 14119,
+      "sha256": "40f12a83547b4f24992137e7d2beac6d79eb4e710729ad874952828fc9677297",
+      "git_blob_sha": "8fa55b499ae3d10fa178bedf266ed8ba669dbff6",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/FIELD-GUIDE-VALIDATION.json",
+      "size_bytes": 1343,
+      "sha256": "6c4194cc1aca49863217fc95ddfd46730572672d30bb0d64741d0919beb89c25",
+      "git_blob_sha": "03f951d63a5d8e81f36725515243c28c5709b22f",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/FIELD-GUIDE-VALIDATION.md",
+      "size_bytes": 3153,
+      "sha256": "1bd33f8ba264b4768aba10c228adf10c386f46ae3b14617c3f7d3e5f68e034d2",
+      "git_blob_sha": "3d843f65516b310d49b1eaabd6891dce656ac47e",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/OPEN-WORLD-GUIDE.md",
+      "size_bytes": 6466,
+      "sha256": "03da9ea85acd3a0141c3adf3810519109c73aa4c620b10a38d400d64be34ad0a",
+      "git_blob_sha": "18d83cdb78dfb623c631b0405e58a8dcf486db6d",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/PRESENTATION-AUDIT.md",
+      "size_bytes": 9122,
+      "sha256": "e30e018579cb05e08cff7df043b12c2ef1fe576184e2c46abb640167cb1338d8",
+      "git_blob_sha": "65edd321cd038d45ec7005b1727ca3e2ddbdbaf9",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/README-HISTORY.md",
+      "size_bytes": 9105,
+      "sha256": "78499a310ade60c35052c14ba700c93f36bcc812f22646e6fd5cb60638cec9e9",
+      "git_blob_sha": "26344bdb308a410af19c9c07e3e61b75c7ef275b",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/README.md",
+      "size_bytes": 3411,
+      "sha256": "4d4618775e3737c5a5fe483f2a9404c0e9d68e7f44caf3c5f51cc99425b6a4b2",
+      "git_blob_sha": "e2d7ca1a347e8eb29c9769b30a6bc2ad1cbbdb40",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/SOURCE-CROSSWALK.md",
+      "size_bytes": 3997,
+      "sha256": "68b85e2f844523ef04d7194c4a9bc7e1fc84d8528d7548612f5edb575d1924a5",
+      "git_blob_sha": "c3a484f4e6f7614f077e7616aca0e2b1e85d6e63",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/SYSTEMS-GUIDE.md",
+      "size_bytes": 12336,
+      "sha256": "02731dec52c075765b0f04ebdb881e66211a3e71f4b8825e3d62da7bfe0e23b1",
+      "git_blob_sha": "08ca218998fe8c63a19ef28ba855a5f27d91332d",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/SYSTEMS-UPDATE-2026-10-18.md",
+      "size_bytes": 2906,
+      "sha256": "e5fdf0f77b10996369da0218f2cd134795f96086f8e50ab4123657e30cf0e6a7",
+      "git_blob_sha": "0f2a3d3e632eede99a52f7be4bca8c59037ac374",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/Start-Windows.bat",
+      "size_bytes": 123,
+      "sha256": "9c30158e133ad48fa5668b3dbdf8da28def053f909947ece8a6d3798f2a5164b",
+      "git_blob_sha": "e4751e90260b855889c8d6d990099b46462574ea",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/VALIDATION.md",
+      "size_bytes": 958,
+      "sha256": "fb2b038138a7c25aea25428dbfe6077f57222fae06b35b50de58f883882c27ff",
+      "git_blob_sha": "4d0fc077f4cc97e72bff30dc1e2313697ac4f297",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/WINDOWS-BUILD.md",
+      "size_bytes": 1663,
+      "sha256": "7102dc564165ff40ca305e035b7c9f405b80887197e7807a81d7ad7a761e12c8",
+      "git_blob_sha": "7acf05e9977e3376c64bd04ff736b02c16753e51",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/characters.py",
+      "size_bytes": 11392,
+      "sha256": "e44ed5ce12a29ef59a407e0c47114a57989824f41023a3afff615a8c872adf95",
+      "git_blob_sha": "833f3f364de35c72cccdf29ca5b4846d149c9255",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/content.py",
+      "size_bytes": 12730,
+      "sha256": "8b2658c144df1bbcbb12314f3a9f9451377d506961aa42a4b4157d0a139c1870",
+      "git_blob_sha": "2748857d7b4a3bc0f6bf2db5ce8f4f0dc06fde49",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/creature_catalog.json",
+      "size_bytes": 59695,
+      "sha256": "c256c0f95113750e77e49248247f2e393c1b2466d61ecc0b749c39c87a2b1f5c",
+      "git_blob_sha": "fbf047f48d2e7b7df8a7981a8ae2622a4deb49b8",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/field_adventure.py",
+      "size_bytes": 12382,
+      "sha256": "25eb80be55a188878cac17c3633940d1f0032c1e70f060810b76a886a90825a7",
+      "git_blob_sha": "c1e08df1688275237009a7558dbf732f3f8dbb00",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/field_rules.py",
+      "size_bytes": 43560,
+      "sha256": "0c0d7d9617449c5111e4cb5d8e60f63cc6496db66611282d4cd6774dea7e5ca0",
+      "git_blob_sha": "ba8db78aabccee2b0a34a979adf32ef972344727",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/generation.py",
+      "size_bytes": 11566,
+      "sha256": "3f7331aeed0ed0059d310d7a59c6a7e7863d0cb01cc047ff39b1a85781de8b31",
+      "git_blob_sha": "77f1fe52cb5a5e2834602c830979559a0167e85f",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/launcher.py",
+      "size_bytes": 1816,
+      "sha256": "5a320b4ab8bc71500daa08766d5ac833ab9571b1a1cf19b5f0833aa775f6a119",
+      "git_blob_sha": "cfa91952028a894d1a6c6b750db4b44bbe4ced2b",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/overland.py",
+      "size_bytes": 15325,
+      "sha256": "b6d72fb98daf0d83022d955c2bd974d26c259d116f0568bde2a4d3204cfaaa51",
+      "git_blob_sha": "16cd5e118374a14a30e3eaea1ff666ff8c99c0be",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/reference/AETHERGALE - THORNS.txt",
+      "size_bytes": 6611,
+      "sha256": "257b372ab6a390d9008a8bb8f444ca97b76901fd734fb8e10011c5addca759f1",
+      "git_blob_sha": "c6b4172b2cb5dd21e403605e1edf283b440078ca",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/reference/CITY_CLOUD_S - THORNS.txt",
+      "size_bytes": 5805,
+      "sha256": "b06fad45014ad927a607c7a8ababc13903b16f7120e994e81b7f0542ade078ee",
+      "git_blob_sha": "16fb518634418a20bf028725191451f829392853",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/reference/ENACT_HILLS - THORNS.txt",
+      "size_bytes": 7386,
+      "sha256": "b754f6a41005dd216340ae4e15257e9ff82deacdd6612d5ba77579bced289b69",
+      "git_blob_sha": "3e5e3090b99ff7b39efc18142e65b0d19d403cb0",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/reference/NULL_FIELD.OMNI - THORNS.txt",
+      "size_bytes": 8962,
+      "sha256": "def9355f32be310202ce35640834f74c2352ec1c0344d3b1983333ea6d8abd8e",
+      "git_blob_sha": "cdfce96d0708151badc8c906a9ced8ef7060271c",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/reference/WN_TOWER Reference.txt",
+      "size_bytes": 21450,
+      "sha256": "65d3cbaad64d3c96c21189a93a3054b2d74290224f862c4ac98cc268321dca2c",
+      "git_blob_sha": "e569d759f49b5e3cdcbdfd2762b80077de44f26b",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/server.py",
+      "size_bytes": 13311,
+      "sha256": "36f33c3ff80d92a0cdddbfcaf356ac6004c8eb160bcd02a17869182d91379ada",
+      "git_blob_sha": "5571f6592b10d433e3382d4e23f5af1a7c4188b9",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/start.sh",
+      "size_bytes": 69,
+      "sha256": "4f591c0910dd2cb648bf3750f1b9b362e912e7a5983bfb44a5ce39d9370448e3",
+      "git_blob_sha": "65228485ad618ac1e9df9e91e64eadb7f57a576c",
+      "mode": "100755"
+    },
+    {
+      "path": "thorns-rpg/static/app.js",
+      "size_bytes": 9561,
+      "sha256": "1bd1ebedc29db919b63d02b0a639fc1e387920f1f4f391f71f2791bd8e745826",
+      "git_blob_sha": "351a486ec3a4112fbf7d6e7756b5bb62201c6c4d",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/static/creator.js",
+      "size_bytes": 6359,
+      "sha256": "128024d3ecb4bfa5672022856886561582185a8323a68e008e35db4807409612",
+      "git_blob_sha": "510d3aa45469e0fd718cea735f8bf7a77907482a",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/static/field-guide.js",
+      "size_bytes": 8526,
+      "sha256": "443a81e57be8f72dae03a9d79daf1bff680ccf4fc885f27633ab76a08ff40fda",
+      "git_blob_sha": "37b84502f7ee4c2e3da78cf565510f16f30e70f3",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/static/index.html",
+      "size_bytes": 9406,
+      "sha256": "05589c7a5c2f6b8610cf5749f9bbd9f866bec027ab735982613d7bded0b9e542",
+      "git_blob_sha": "b800658bf8af22e619b564eab8fd37d20ed28ce5",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/static/needle-map.jpg",
+      "size_bytes": 433288,
+      "sha256": "cad83885defe89ba6d92acd0b0194c24bbfa8e6b13e73acbdb6a56c01cb9dd56",
+      "git_blob_sha": "683f91dc50940453c8cc1d7ab154bc11ef303a7a",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/static/openworld.js",
+      "size_bytes": 4857,
+      "sha256": "4c22e9449b6a46e0b9d510eb5d1bbe5f759f1756f5a08a2defbff8f0fb51e1cf",
+      "git_blob_sha": "fd714d8737440d65a84bd7f226eef2d823e0cfa2",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/static/style.css",
+      "size_bytes": 9200,
+      "sha256": "54034f10d54a7e6c416960fcc5e1bb9e0cebd43b251ed96e5ee2ae54f7912404",
+      "git_blob_sha": "4d56014921d6294537bcf1f18470e8591e4f76b4",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/static/world-map.jpg",
+      "size_bytes": 738323,
+      "sha256": "a36109c6d4157b9ef9d77006298fa46b07be461c564be792f9111a4f01cb7ccc",
+      "git_blob_sha": "463dce481cf70dee11e91394cff3f1cb00fb85ec",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/test_contact_ui.cjs",
+      "size_bytes": 1938,
+      "sha256": "95c3f1b9a1b54554c6bbcb4a9d21bdd1e101d5b252753f8ed12db576ebed8e52",
+      "git_blob_sha": "5f049c629e2ba75a7222e67e4424dcb76922c1de",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/test_content_contacts.py",
+      "size_bytes": 2709,
+      "sha256": "346b7fb73c701ffbf7c86f8dd13fbc7c46b1fa1b49ce48c6fa437618b06f6f3e",
+      "git_blob_sha": "fdf205781ba2827dd25003ac356591b5c28e99ab",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/test_content_grammar.py",
+      "size_bytes": 4551,
+      "sha256": "add12fc5c966c8142886f518bf866268ff9aef55379c3cfcb1f2d04aee46bbb5",
+      "git_blob_sha": "56ac0078f5530c689c32ec6f328533c5f92a64e7",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/test_field_guide.py",
+      "size_bytes": 21668,
+      "sha256": "c4e1af2a556efc337ff6c8530fae36b94099e8eb2e18276e56240c8044e5d59d",
+      "git_blob_sha": "e19fade7b0c5375c9aa1795e2aa291ffe112e684",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/test_field_ui.cjs",
+      "size_bytes": 7763,
+      "sha256": "4ea6f8c9a2e74ed146a786f70fc4364af8059cb46e19301c5f7a1aa54c838057",
+      "git_blob_sha": "68f25f451f9fb1a69c0216d72cc1c3f36c901b40",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/test_game.py",
+      "size_bytes": 3722,
+      "sha256": "0fefe788fb3e4ac46e1f210d77156353bebc317771e9ffdf1976c271cd238635",
+      "git_blob_sha": "fd92715eb0af135c180519cd026d3492dd3b5747",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/test_http.py",
+      "size_bytes": 2694,
+      "sha256": "073187881572c477f68f4908864f9513d25cf817d4af40553759102d01be965d",
+      "git_blob_sha": "d7819856c0474d0325ad6d07523e26899a3d5ab1",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/test_launcher.py",
+      "size_bytes": 588,
+      "sha256": "da610576c305d06f4861db5828a62b20eded0f07c6f9e745007c1aa0d42edc55",
+      "git_blob_sha": "abab07a9a6822f00a527ad2e7e2318d1eb203c36",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/test_overland.py",
+      "size_bytes": 4427,
+      "sha256": "2a14da8ea4d20005a5b1c00d9b85415567afd3e1fcb5ead9e935f8244f777913",
+      "git_blob_sha": "1757b53f17544941d4d64aa5adbe848048628ec0",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/test_systems.py",
+      "size_bytes": 5069,
+      "sha256": "f231abb711e3ffe88bf0191443c936c5665a4f50adc3389160f0fe14b7ba90da",
+      "git_blob_sha": "29d5c29c78568500fe18b3d3cccc83f5458ea9ec",
+      "mode": "100644"
+    },
+    {
+      "path": "thorns-rpg/world.py",
+      "size_bytes": 15718,
+      "sha256": "c12120b6cbedd9436329e8c9f058b99591ffeafd16bb9fc285ec39fb3b5fe814",
+      "git_blob_sha": "182621f5f5a0586d034a170a21471647af0d00fd",
+      "mode": "100644"
+    }
+  ]
+}
