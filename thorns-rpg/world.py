@@ -77,6 +77,14 @@ WORK_CONTEXTS={
 CONTRACT_WORK_CONTEXTS={
  'Survey':{'route/survey work','records/research work'},
 }
+CONTACT_TOPIC_WORK_CONTEXTS={
+ 'place':{'route/survey work','records/research work','ecology/stewardship work'},
+ 'needs':{'craft/repair work','supply/trade work','care work','ecology/stewardship work'},
+ 'history':{'route/survey work','records/research work','teaching/learning work'},
+ 'access':{'route/survey work','records/research work'},
+ 'contracts':{'route/survey work','records/research work','supply/trade work'},
+ 'plans':{'route/survey work','craft/repair work','records/research work','teaching/learning work','ecology/stewardship work'},
+}
 TEMPLATE_WORK_CONTEXTS={
  'pilgrims':{'route/survey work'},
  'salvage':{'craft/repair work','supply/trade work'},
@@ -127,6 +135,10 @@ def character_context(character,work_contexts=(),faction=None):
 
 def contract_context(character,faction,kind='Survey'):
     return character_context(character,CONTRACT_WORK_CONTEXTS.get(kind,()),faction)
+
+
+def contact_context(character,topic,faction):
+    return character_context(character,CONTACT_TOPIC_WORK_CONTEXTS.get(topic,()),faction)
 
 
 def encounter_context(character,template_id,faction):

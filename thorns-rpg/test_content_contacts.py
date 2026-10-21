@@ -32,6 +32,26 @@ class ContactTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.call('ow_talk',topic='place')
         self.assertEqual(server.fetch(self.host['code'])['contacts'],{})
 
+    def test_dialogue_context_does_not_change_reply_or_outcomes(self):
+        self.open();self.call('ow_talk',topic='place')
+        original=server.fetch(self.host['code']);faction=original['contacts']['0,0']['faction']
+        plain=copy.deepcopy(original);linked=copy.deepcopy(original)
+        plain['players'][0]['character'].update(livelihood='unlisted work',relationship='unrelated person')
+        linked['players'][0]['character'].update(livelihood='field medic',relationship='I recognize '+faction)
+        def check(ok,message):
+            if not ok:raise ValueError(message)
+        for room in (plain,linked):
+            with patch('overland.secrets.randbelow',return_value=19):
+                overland.speak(room,room['players'][0],overland.tile(room,0,0),'needs',check,lambda _r,_text:None)
+        a,b=plain['players'][0],linked['players'][0]
+        self.assertEqual(a['dialogue_log'][-1]['response'],b['dialogue_log'][-1]['response'])
+        self.assertEqual(a['dialogue_log'][-1]['context'],{'livelihood':[],'relationship':None})
+        self.assertEqual(b['dialogue_log'][-1]['context'],{'livelihood':['care work'],'relationship':faction})
+        for key in ['supplies','credits','grid','vitals','xp','contract','benefits']:
+            self.assertEqual(a[key],b[key],key)
+        self.assertEqual(plain['reputation'],linked['reputation'])
+        self.assertEqual(plain['contacts']['0,0']['visitors'],linked['contacts']['0,0']['visitors'])
+
     def test_site_limit_blocks_new_movement_and_preserves_current_position(self):
         self.open();r=server.fetch(self.host['code'])
         r['overland_sites']={str(i):{} for i in range(2048)};server.save(r)
