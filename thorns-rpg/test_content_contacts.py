@@ -4,6 +4,7 @@ from unittest.mock import patch
 import overland
 import server
 import test_game
+import world
 
 
 class ContactTests(unittest.TestCase):
@@ -31,6 +32,42 @@ class ContactTests(unittest.TestCase):
         self.open();r=server.fetch(self.host['code']);r['players'][0]['grid']=[40,0];server.save(r)
         with self.assertRaises(ValueError):self.call('ow_talk',topic='place')
         self.assertEqual(server.fetch(self.host['code'])['contacts'],{})
+
+    def test_dialogue_context_does_not_change_reply_or_outcomes(self):
+        self.open();self.call('ow_talk',topic='place')
+        original=server.fetch(self.host['code']);faction=original['contacts']['0,0']['faction']
+        plain=copy.deepcopy(original);linked=copy.deepcopy(original)
+        plain['players'][0]['character'].update(livelihood='unlisted work',relationship='unrelated person')
+        linked['players'][0]['character'].update(livelihood='field medic',relationship='I recognize '+faction)
+        def check(ok,message):
+            if not ok:raise ValueError(message)
+        with patch('overland.secrets.randbelow',return_value=19) as die:
+            for room in (plain,linked):
+                overland.speak(room,room['players'][0],overland.tile(room,0,0),'needs',check,lambda _r,_text:None)
+            self.assertEqual(die.call_count,2)
+        a,b=plain['players'][0],linked['players'][0]
+        self.assertEqual(a['dialogue_log'][-1]['response'],b['dialogue_log'][-1]['response'])
+        self.assertEqual(a['dialogue_log'][-1]['context'],{'livelihood':[],'relationship':None})
+        self.assertEqual(b['dialogue_log'][-1]['context'],{'livelihood':['care work'],'relationship':faction})
+        self.assertEqual(a['dialogue_log'][-1]['variation'],'')
+        self.assertIn('Care work frames the concern',b['dialogue_log'][-1]['variation'])
+        self.assertIn(faction,b['dialogue_log'][-1]['variation'])
+        for key in ['supplies','credits','grid','vitals','xp','contract','benefits']:
+            self.assertEqual(a[key],b[key],key)
+        self.assertEqual(plain['reputation'],linked['reputation'])
+        self.assertEqual(plain['contacts']['0,0']['visitors'],linked['contacts']['0,0']['visitors'])
+
+    def test_all_six_topics_have_authored_context_variations(self):
+        samples=[('place','Cartographer'),('needs','Field medic'),('history','Archivist'),
+                 ('access','Surveyor'),('contracts','Trader'),('plans','Mechanic')]
+        for topic,livelihood in samples:
+            context=world.contact_context(
+                {'livelihood':livelihood,'relationship':'I know Sap Core'},
+                topic,'Sap Core')
+            self.assertTrue(context['livelihood'],topic)
+            variation=world.contact_dialogue_variation(context,topic)
+            self.assertTrue(variation.startswith('Narrative aside:'),topic)
+            self.assertIn('Sap Core',variation,topic)
 
     def test_site_limit_blocks_new_movement_and_preserves_current_position(self):
         self.open();r=server.fetch(self.host['code'])

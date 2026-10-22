@@ -82,7 +82,9 @@ def speak(r,p,here,topic,check,log):
  else:body=f"I aim to {a['character']['goal']}. My boundary is {a['character']['boundary'].lower()}."
  if not ok:body+=' Those public facts remain available; any further interpretation is provisional.'
  text=generation.dialogue(r,p,a,topic,body,ok,here)
- p['dialogue_log'].append(dict(site=p['grid'][:],npc=a['name'],topic=topic,response=text,step=p['steps'],character=dict(name=p['name'],**p['character'])))
+ context=world.contact_context(p.get('character',{}),topic,a['faction'])
+ variation=world.contact_dialogue_variation(context,topic)
+ p['dialogue_log'].append(dict(site=p['grid'][:],npc=a['name'],topic=topic,response=text,step=p['steps'],character=dict(name=p['name'],**p['character']),context=context,variation=variation))
  p['dialogue_log']=p['dialogue_log'][-200:];relationship['visits']+=1
  if ok and p['steps']>=relationship['bond_after']:
   relationship['trust']=min(5,relationship['trust']+1);relationship['bond_after']=p['steps']+4
@@ -99,7 +101,15 @@ def tick(r,p,log):
  return False
 def view(r,p):
  x,y=p['grid'];a=r.get('contacts',{}).get(f'{x},{y}')
- return dict(contact=a,last_dialogue=next((d['response'] for d in reversed(p.get('dialogue_log',[])) if d['site']==[x,y]),''),location=tile(r,x,y),tiles=[tile(r,x+dx,y+dy) for dy in range(-2,3) for dx in range(-2,3)],penalty=penalty(p),mods={k:dict(label=v[0],skill=v[2],cost=12) for k,v in MODS.items()})
+ last=next((d for d in reversed(p.get('dialogue_log',[])) if d['site']==[x,y]),None)
+ here=tile(r,x,y);preview=None
+ if not p.get('contract') and here['facility'] in {'relay','market','sanctuary'}:
+  issuers=world.REGIONAL.get(here['region'],['NanoClad'])
+  serial=p.get('contract_serial',0)
+  faction=issuers[0] if field_rules.active(r) else issuers[serial%len(issuers)]
+  preview=dict(kind='Survey',description='Return a verified route record',faction=faction,
+               context=world.contract_context(p.get('character',{}),faction))
+ return dict(contact=a,last_dialogue=last.get('response','') if last else '',last_dialogue_context=last.get('context') if last else None,last_dialogue_variation=last.get('variation','') if last else '',location=here,tiles=[tile(r,x+dx,y+dy) for dy in range(-2,3) for dx in range(-2,3)],penalty=penalty(p),mods={k:dict(label=v[0],skill=v[2],cost=12) for k,v in MODS.items()},contract_preview=preview)
 def act(r,p,d,check,log):
  check(r['mode']=='open' and r['started'],'Start an open-world room first.')
  if field_rules.active(r):return field_adventure.native(r,p,d,check,log)
@@ -125,7 +135,8 @@ def act(r,p,d,check,log):
    pool=[t for t in world.TEMPLATES if t['id'] not in p['recent_events'][-3:]];t=secrets.choice(pool)
    faction=secrets.choice(world.REGIONAL.get(here['region'],['NanoClad']))
    rep=r['reputation'][faction];dc=12+(-2 if rep>=6 else 2 if rep<=-6 else 0)
-   p['event']=dict(title=t['title'],body=t['body'],approaches=t['approaches'],faction=faction,dc=dc)
+   context=world.encounter_context(p.get('character',{}),t['id'],faction)
+   p['event']=dict(title=t['title'],body=t['body'],approaches=t['approaches'],faction=faction,dc=dc,template=t['id'],context=context)
    p['recent_events']=(p['recent_events']+[t['id']])[-3:]
  elif op=='ow_talk':
   speak(r,p,here,d.get('topic','place'),check,log)
@@ -152,7 +163,7 @@ def act(r,p,d,check,log):
  elif op=='ow_contract':
   check(p['contract'] is None,'Finish or abandon your current contract.');check(here['facility'] in ['relay','market','sanctuary'],'Find a contract board.')
   n=p['contract_serial'];p['contract_serial']+=1;x,y=p['grid'];f=world.REGIONAL.get(here['region'],['NanoClad'])[n%len(world.REGIONAL.get(here['region'],['NanoClad']))]
-  p['contract']=dict(target=[x+2+(n%3),y+1],faction=f,reward=18,kind='Survey and return a verified route record',stage='travel')
+  p['contract']=dict(target=[x+2+(n%3),y+1],faction=f,reward=18,kind='Survey and return a verified route record',stage='travel',context=world.contract_context(p.get('character',{}),f))
  elif op=='ow_complete':
   c=p['contract'];check(c is not None and p['grid']==c['target'],'Reach your contract coordinates.')
   if not roll(r,p,'percept','percept',10,log):

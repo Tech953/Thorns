@@ -1,4 +1,5 @@
 """Procedural encounter and local interaction rules. All numbers are adaptations."""
+import re
 import secrets
 FACTIONS={
  'THORNS':'Caravan confidence and care for entrusted records.',
@@ -62,6 +63,154 @@ ATMOSPHERE={
 }
 COMPLICATIONS=['The witnesses disagree about sequence.','The simplest record is incomplete.','There is time to help, but little room for guesswork.','A second group is waiting for the result.']
 
+# These are explicit, whole-phrase cues, not free-form interpretation. They add
+# descriptive context only; none changes an offer, check, reward, or permission.
+WORK_CONTEXTS={
+ 'route/survey work':('courier','scout','surveyor','cartographer','mapmaker','route mapper','route recorder','guide','pilgrim'),
+ 'craft/repair work':('mechanic','repairer','artisan','metalworker','craftsperson','technician','engineer','seamllurgist','needlurgist'),
+ 'supply/trade work':('farmer','trader','merchant','supplier','provisioner','cook','caravan runner','vendor'),
+ 'care work':('medic','healer','nurse','caregiver','care worker','field medic'),
+ 'records/research work':('researcher','archivist','historian','scholar','analyst','scribe','record keeper'),
+ 'teaching/learning work':('teacher','tutor','instructor','educator','student','apprentice'),
+ 'ecology/stewardship work':('ecologist','botanist','cultivator','forager','gardener','druid'),
+}
+CONTRACT_WORK_CONTEXTS={
+ 'Survey':{'route/survey work','records/research work'},
+}
+CONTACT_TOPIC_WORK_CONTEXTS={
+ 'place':{'route/survey work','records/research work','ecology/stewardship work'},
+ 'needs':{'craft/repair work','supply/trade work','care work','ecology/stewardship work'},
+ 'history':{'route/survey work','records/research work','teaching/learning work'},
+ 'access':{'route/survey work','records/research work'},
+ 'contracts':{'route/survey work','records/research work','supply/trade work'},
+ 'plans':{'route/survey work','craft/repair work','records/research work','teaching/learning work','ecology/stewardship work'},
+}
+CONTACT_DIALOGUE_VARIATIONS={
+ 'place':{
+  'route/survey work':'Route work frames this approach as a partial path, not a complete map.',
+  'records/research work':'The local record is one account; it does not settle the whole region.',
+  'ecology/stewardship work':'These conditions are observations, not a guarantee of what lives or grows here.'},
+ 'needs':{
+  'craft/repair work':'A repair lens can clarify the stated need, but no tools or stock change hands in this conversation.',
+  'supply/trade work':'Trade experience can help compare the stated need; talking still transfers no stock.',
+  'care work':'Care work frames the concern, but this answer is not treatment.',
+  'ecology/stewardship work':'A stewardship lens may help interpret the request; no resources appear automatically.'},
+ 'history':{
+  'route/survey work':'A route record can anchor sequence while the wider history stays open.',
+  'records/research work':'The contact’s local record remains one source, not a complete account.',
+  'teaching/learning work':'A learner’s question can guide what to clarify, not what to conclude.'},
+ 'access':{
+  'route/survey work':'Route knowledge can clarify a boundary, but it does not open one.',
+  'records/research work':'A record can document the boundary; it cannot grant authority.'},
+ 'contracts':{
+  'route/survey work':'Survey experience can distinguish route evidence from delivery terms.',
+  'records/research work':'Record-keeping can check what is promised, not verify it before delivery.',
+  'supply/trade work':'Supply experience can help compare escrow and reward; acceptance remains a separate action.'},
+ 'plans':{
+  'route/survey work':'Route work can make a next step legible, not guarantee a safe crossing.',
+  'craft/repair work':'Repair work can suggest a practical sequence, but no materials are committed here.',
+  'records/research work':'Research can frame open questions without turning uncertainty into fact.',
+  'teaching/learning work':'Teaching can surface the next question; it does not assign a skill bonus.',
+  'ecology/stewardship work':'Stewardship can flag local conditions, not guarantee an outcome.'},
+}
+CONTACT_RELATIONSHIP_VARIATIONS={
+ 'place':'The mention of {faction} in your character record does not extend this local map.',
+ 'needs':'The mention of {faction} does not turn this stated need into a debt or supply transfer.',
+ 'history':'The mention of {faction} belongs to your character’s account, not this contact’s local history.',
+ 'access':'The mention of {faction} does not alter this boundary or grant authority.',
+ 'contracts':'The mention of {faction} adds no promise or term to this survey contract.',
+ 'plans':'The mention of {faction} creates no commitment for this plan.',
+}
+TEMPLATE_WORK_CONTEXTS={
+ 'pilgrims':{'route/survey work'},
+ 'salvage':{'craft/repair work','supply/trade work'},
+ 'shelter':{'craft/repair work','care work','ecology/stewardship work'},
+ 'echo':{'records/research work','teaching/learning work'},
+ 'lesson':{'records/research work','teaching/learning work'},
+ 'provision':{'supply/trade work','care work'},
+ 'ink':{'records/research work','supply/trade work'},
+ 'seam':{'craft/repair work','records/research work'},
+ 'crystal':{'craft/repair work','records/research work'},
+ 'wood':{'records/research work','supply/trade work','ecology/stewardship work'},
+ 'light':{'records/research work','teaching/learning work'},
+ 'rhetoric':{'records/research work','supply/trade work'},
+}
+RELATIONSHIP_ALIASES={
+ 'KHO / ED.NET':('KHO','ED.NET'),
+ 'FOOTHILL CUSP residents':('FOOTHILL CUSP',),
+ 'CHECKPOINT.RESID community':('CHECKPOINT.RESID',),
+ 'Lila / CASC':('Lila','CASC'),
+}
+
+
+def _normalized_phrase(value):
+    if not isinstance(value,str):return ''
+    return ' '.join(re.findall(r'[a-z0-9]+',value.casefold()))
+
+
+def _mentions(text,phrase):
+    hay=' '+_normalized_phrase(text)+' '
+    needle=' '+_normalized_phrase(phrase)+' '
+    return needle!='  ' and needle in hay
+
+
+def character_context(character,work_contexts=(),faction=None):
+    """Return recognized character links without exposing or interpreting raw prose."""
+    character=character if isinstance(character,dict) else {}
+    livelihood=character.get('livelihood','')
+    relationship=character.get('relationship','')
+    allowed=set(work_contexts or ())
+    work=[label for label,aliases in WORK_CONTEXTS.items()
+          if label in allowed and any(_mentions(livelihood,alias) for alias in aliases)]
+    linked=None
+    if faction in FACTIONS:
+        aliases=(faction,)+RELATIONSHIP_ALIASES.get(faction,())
+        if any(_mentions(relationship,alias) for alias in aliases):linked=faction
+    return dict(livelihood=work,relationship=linked)
+
+
+def contract_context(character,faction,kind='Survey'):
+    return character_context(character,CONTRACT_WORK_CONTEXTS.get(kind,()),faction)
+
+
+def contact_context(character,topic,faction):
+    return character_context(character,CONTACT_TOPIC_WORK_CONTEXTS.get(topic,()),faction)
+
+
+def contact_dialogue_variation(context,topic):
+    """Authored narrative aside; never part of an NPC's claimed knowledge."""
+    parts=[]
+    for label in context.get('livelihood',()):
+        line=CONTACT_DIALOGUE_VARIATIONS.get(topic,{}).get(label)
+        if line:
+            parts.append(line)
+            break
+    faction=context.get('relationship')
+    relationship_line=CONTACT_RELATIONSHIP_VARIATIONS.get(topic)
+    if faction and relationship_line:
+        parts.append(relationship_line.format(faction=faction))
+    return 'Narrative aside: '+' '.join(parts) if parts else ''
+
+
+def encounter_context(character,template_id,faction):
+    return character_context(character,TEMPLATE_WORK_CONTEXTS.get(template_id,()),faction)
+
+
+def _context_text(context):
+    parts=[]
+    if context.get('livelihood'):parts.append('livelihood fit: '+', '.join(context['livelihood']))
+    if context.get('relationship'):parts.append('relationship thread: '+context['relationship'])
+    return '; '.join(parts)
+
+
+def party_encounter_context(players,template_id,faction):
+    result=[]
+    for player in players:
+        context=encounter_context(player.get('character',{}),template_id,faction)
+        if context['livelihood'] or context['relationship']:
+            result.append(dict(character=player.get('name','Expedition member'),**context))
+    return result
+
 def init(r):
  r.setdefault('reputation',{k:0 for k in FACTIONS});r.setdefault('rep_log',[])
  r.setdefault('procedural',False);r.setdefault('encounter',None);r.setdefault('encounter_history',[])
@@ -94,7 +243,11 @@ def generate(r,region):
  # One applicable authored skill per option prevents arbitrary claims of proficiency.
  choices=[dict(label=a,stat=stat,dc=base+modifier,skill=sk,to=r['node'],fail=r['node'],need=None,flag=None,rep_delta=2,approach='check') for a,stat,sk in t['approaches']]
  choices.append(dict(label='Decline and continue the expedition.',stat=None,dc=0,skill=None,to=r['node'],fail=r['node'],need=None,flag=None,rep_delta=0,approach='leave'))
- r['encounter']=dict(region=region,title=t['title'],text=secrets.choice(ATMOSPHERE.get(region,ATMOSPHERE['FOUR_CORNERS']))+'\n\n'+t['body']+' '+secrets.choice(COMPLICATIONS)+'\n\nRepresented contact: '+f+'. Your expedition is '+tier(v).lower()+'. Reputation changes difficulty by '+str(modifier)+'. Declining is permitted.',choices=choices,faction=f,id=r['encounter_serial'],template=t['id'])
+ context=party_encounter_context(r['players'],t['id'],f)
+ text=secrets.choice(ATMOSPHERE.get(region,ATMOSPHERE['FOUR_CORNERS']))+'\n\n'+t['body']+' '+secrets.choice(COMPLICATIONS)+'\n\nRepresented contact: '+f+'. Your expedition is '+tier(v).lower()+'. Reputation changes difficulty by '+str(modifier)+'. Declining is permitted.'
+ if context:
+  text+='\n\nCharacter context (informational only): '+' | '.join(x['character']+' — '+_context_text(x) for x in context)
+ r['encounter']=dict(region=region,title=t['title'],text=text,choices=choices,faction=f,id=r['encounter_serial'],template=t['id'],context=context)
  r['encounter_history'].append(t['id']);r['encounter_history']=r['encounter_history'][-20:]
 
 def settle(r,choice,success):

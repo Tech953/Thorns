@@ -126,6 +126,7 @@ def native(w,p,d,check,log):
         cm=dict(id=p['id']+':contract:'+str(n),kind='Survey',faction=f,target=[x+2+(n%3),y+1],
                 issuer=here['title'],issuer_pos=p['grid'][:],recipient='route recorder at the destination',scope='one truthful route survey',
                 evidence='Percept/percept DC 10 at the destination',deadline=None,exit='Abandon freely; −1 issuer standing',
+                context=world.contract_context(p.get('character',{}),f),
                 escrow=dict(food=2,water=2,seed=1),reward='2 food, 2 water, 1 seed, 2 XP, +2 issuer standing')
         for k,n in cm['escrow'].items():provider[k]-=n
         p['contract']=cm;cycles=0;out='The board reserves its stated reward for '+cm['id']+'. Destination '+str(cm['target'])+'.'
