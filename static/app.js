@@ -4,7 +4,12 @@ let session=null,state=null,busy=false,lastRender='';
 try{session=JSON.parse(sessionStorage.getItem('thorns-session'));}catch{}
 function error(e){$('error').textContent=e?.message||'';}
 function node(tag,text,cls){const e=document.createElement(tag);e.textContent=text;if(cls)e.className=cls;return e;}
-const lobbySkip=node('a','SKIP TO LOBBY ↓','lobby-skip');lobbySkip.href='#lobby';Array.from($('builder').children).find(e=>e.tagName==='H2')?.after(lobbySkip);$('lobby').tabIndex=-1;
+const creatorSection=$('builder'),creatorHeading=Array.from(creatorSection.children).find(e=>e.tagName==='H2');
+if(creatorHeading){creatorHeading.id='creator-title';creatorSection.setAttribute('aria-labelledby',creatorHeading.id);}
+const lobbySection=$('lobby'),lobbyHeading=Array.from(lobbySection.children).find(e=>e.tagName==='H1');
+if(lobbyHeading){lobbyHeading.id='lobby-title';lobbySection.setAttribute('aria-labelledby',lobbyHeading.id);}
+for(const [formId,titleId]of [['create','create-title'],['join','join-title']]){const form=$(formId),heading=Array.from(form.children).find(e=>e.tagName==='H2');if(heading){heading.id=titleId;form.setAttribute('aria-labelledby',titleId);}}
+const lobbySkip=node('a','SKIP TO LOBBY ↓','lobby-skip');lobbySkip.href='#lobby';creatorHeading?.after(lobbySkip);lobbySection.tabIndex=-1;
 async function api(op,data={}){const response=await fetch('/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...session,op,...data}),signal:AbortSignal.timeout(10000)});const r=await response.json();if(!response.ok)throw Error(r.error||'Connection failed');return r;}
 async function action(op,data={}){if(busy)return;busy=true;error(null);try{state=await api(op,{revision:state.revision,...data});render();return true;}catch(e){error(e);await poll();return false;}finally{busy=false;}}
 for(const op of ['create','join'])$(op).onsubmit=async e=>{e.preventDefault();if(busy)return;busy=true;error(null);try{await Creator.init;const d=Object.fromEntries(new FormData(e.target));d.character=Creator.read();d.role=Creator.role();if(op==='create'){d.procedural=$('procedural').checked;d.hardcore=$('hardcore').checked;}session=await api(op,d);sessionStorage.setItem('thorns-session',JSON.stringify(session));localStorage.setItem('thorns-recovery',JSON.stringify(session));$('resume').hidden=false;await poll();}catch(e){error(e);}finally{busy=false;}};

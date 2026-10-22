@@ -7,6 +7,7 @@
 - Give contract and encounter context notes deterministic, activity-specific narrator asides; keep them separate from participant dialogue and mechanically inert.
 - Show one context presentation at a time: prefer an authored aside over duplicate tag labels, with a tag fallback for older saved records.
 - Add a keyboard-accessible jump from character setup to the expedition lobby.
+- Name the creator and lobby landmarks, and the create/join forms, from their visible headings for screen-reader navigation.
 
 # 0.6.0 — Field Guide systems integration
 
